@@ -145,7 +145,7 @@ export default function Home() {
       <div className="relative w-full max-w-md mt-4">
         <Card className={`w-full h-48 transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
           <CardContent
-            className="absolute inset-0 flex items-center justify-center p-6 backface-hidden cursor-pointer"
+            className={`absolute inset-0 flex items-center justify-center p-6 backface-hidden cursor-pointer ${isFlipped ? 'bg-yellow-100' : ''}`}
             onClick={handleCardClick}
           >
             <div className="text-xl font-semibold">
@@ -205,3 +205,4 @@ export default function Home() {
     </div>
   );
 }
+
