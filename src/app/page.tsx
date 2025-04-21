@@ -6,6 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface Flashcard {
   id: number;
@@ -273,13 +274,13 @@ export default function Home() {
 
     const goToNextCard = () => {
         let nextIndex = currentCardIndex;
-        const remainingCards = flashcards.filter(card => !card.gotIt);
-
-        if (remainingCards.length === 0) {
-            return;
-        }
 
         if (isRandom) {
+            const remainingCards = flashcards.filter(card => !card.gotIt);
+            if (remainingCards.length === 0) {
+                return;
+            }
+
             let unlearnedIndices = flashcards
                 .map((card, index) => (!card.gotIt ? index : -1))
                 .filter(index => index !== -1);
@@ -296,14 +297,18 @@ export default function Home() {
                 nextIndex = unlearnedIndices[0];
             }
         } else {
-            let tempNextIndex = nextIndex;
-            do {
-                tempNextIndex = (tempNextIndex + 1) % flashcards.length;
-                if (!flashcards[tempNextIndex].gotIt) {
-                    nextIndex = tempNextIndex;
+            let nextIndexCalculated = false;
+            for (let i = 1; i <= flashcards.length; i++) {
+                let tempIndex = (currentCardIndex + i) % flashcards.length;
+                if (!flashcards[tempIndex].gotIt) {
+                    nextIndex = tempIndex;
+                    nextIndexCalculated = true;
                     break;
                 }
-            } while (tempNextIndex !== nextIndex);
+            }
+            if (!nextIndexCalculated) {
+                return;
+            }
         }
 
         setCurrentCardIndex(nextIndex);
@@ -418,14 +423,16 @@ export default function Home() {
               Here's a list of all the words you're learning.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            {flashcards.map((card) => (
-              <div key={card.id} className="flex justify-between">
-                <span>{card.polish}</span>
-                <span>{card.spanish} {card.gotIt ? '✅' : ''}</span>
-              </div>
-            ))}
-          </div>
+            <ScrollArea className="h-[300px]">
+                <div className="grid gap-4 py-4">
+                    {flashcards.map((card) => (
+                        <div key={card.id} className="flex justify-between">
+                            <span>{card.polish}</span>
+                            <span>{card.spanish} {card.gotIt ? '✅' : ''}</span>
+                        </div>
+                    ))}
+                </div>
+            </ScrollArea>
         </DialogContent>
       </Dialog>
     </div>
