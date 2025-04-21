@@ -100,8 +100,6 @@ export default function Home() {
             }
         } while (tempNextIndex !== nextIndex);
     }
-
-
     setCurrentCardIndex(nextIndex);
     setIsFlipped(false);
 };
@@ -208,8 +206,8 @@ export default function Home() {
           <div className="grid gap-4 py-4">
             {flashcards.map((card) => (
               <div key={card.id} className="flex justify-between">
-                <span style={{ color: card.gotIt ? 'green' : 'inherit' }}>{card.polish}</span>
-                <span style={{ color: card.gotIt ? 'green' : 'inherit' }}>{card.spanish}</span>
+                <span>{card.polish} {card.gotIt && '✅'}</span>
+                <span>{card.spanish} {card.gotIt && '✅'}</span>
               </div>
             ))}
           </div>
@@ -218,3 +216,4 @@ export default function Home() {
     </div>
   );
 }
+
