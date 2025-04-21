@@ -190,8 +190,8 @@ export default function Home() {
           <div className="grid gap-4 py-4">
             {flashcards.map((card) => (
               <div key={card.id} className="flex justify-between">
-                <span>{card.polish}</span>
-                <span>{card.spanish}</span>
+                <span style={{ color: card.gotIt ? 'green' : 'inherit' }}>{card.polish}</span>
+                <span style={{ color: card.gotIt ? 'green' : 'inherit' }}>{card.spanish}</span>
               </div>
             ))}
           </div>
@@ -200,3 +200,4 @@ export default function Home() {
     </div>
   );
 }
+
