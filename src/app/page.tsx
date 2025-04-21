@@ -71,8 +71,6 @@ export default function Home() {
   const remainingCardsCount = flashcards.filter(card => !card.gotIt).length;
   const currentCard = flashcards[currentCardIndex];
 
-  const cardContent = languageSide === 'polish' ? currentCard.polish : currentCard.spanish;
-
   const handleCardClick = () => {
     setIsFlipped(!isFlipped);
   };
@@ -81,7 +79,7 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-secondary">
       <h1 className="text-2xl font-bold mb-4 text-primary">LinguaFlash</h1>
 
-      <Select onValueChange={(value) => setLanguageSide(value as 'polish' | 'spanish')}>
+      <Select onValueChange={(value) => setLanguageSide(value as 'polish' | 'spanish')} defaultValue="polish">
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Select Language" />
         </SelectTrigger>
@@ -97,24 +95,21 @@ export default function Home() {
             className="absolute inset-0 flex items-center justify-center p-6 backface-hidden"
             onClick={handleCardClick}
           >
-            <div className="text-xl font-semibold">{cardContent}</div>
+            <div className="text-xl font-semibold">
+              {currentCard.polish}
+            </div>
           </CardContent>
           <CardContent
             className="absolute inset-0 flex items-center justify-center p-6 rotate-y-180 backface-hidden"
             onClick={handleCardClick}
           >
             <div className="text-xl font-semibold">
-              {languageSide === 'polish' ? currentCard.spanish : currentCard.polish}
+              {currentCard.spanish}
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <div className="mt-4 text-gray-600">Flashcards remaining: {remainingCardsCount}</div>
-
-      <Button variant="link" onClick={resetProgress} className="mt-4">
-        Reset Progress
-      </Button>
       <div className="flex gap-4 mt-4">
         <Button variant="outline" onClick={markAsDontKnow} className="bg-red-500 text-white hover:bg-red-700">
           Don't know yet
@@ -123,6 +118,14 @@ export default function Home() {
           Got it
         </Button>
       </div>
+
+      <div className="mt-4 text-gray-600">Flashcards remaining: {remainingCardsCount}</div>
+
+      <Button variant="link" onClick={resetProgress} className="mt-4">
+        Reset Progress
+      </Button>
     </div>
   );
 }
+
+    
