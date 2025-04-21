@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -23,8 +22,8 @@ const initialFlashcards: Flashcard[] = [
 export default function Home() {
   const [flashcards, setFlashcards] = useState<Flashcard[]>(initialFlashcards);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [showPolishFirst, setShowPolishFirst] = useState(true);
   const [languageSide, setLanguageSide] = useState<'polish' | 'spanish'>('polish');
+  const [isFlipped, setIsFlipped] = useState(false);
 
   useEffect(() => {
     const savedState = localStorage.getItem('flashcardState');
@@ -36,10 +35,6 @@ export default function Home() {
   useEffect(() => {
     localStorage.setItem('flashcardState', JSON.stringify(flashcards));
   }, [flashcards]);
-
-  const toggleLanguageSide = () => {
-    setShowPolishFirst(!showPolishFirst);
-  };
 
   const markAsGotIt = () => {
     const updatedFlashcards = [...flashcards];
@@ -63,16 +58,24 @@ export default function Home() {
       nextIndex = (nextIndex + 1) % flashcards.length;
     } while (flashcards[nextIndex].gotIt);
     setCurrentCardIndex(nextIndex);
+    setIsFlipped(false);
   };
 
   const resetProgress = () => {
     const resetFlashcards = flashcards.map(card => ({ ...card, gotIt: false }));
     setFlashcards(resetFlashcards);
     setCurrentCardIndex(0);
+    setIsFlipped(false);
   };
 
   const remainingCardsCount = flashcards.filter(card => !card.gotIt).length;
   const currentCard = flashcards[currentCardIndex];
+
+  const cardContent = languageSide === 'polish' ? currentCard.polish : currentCard.spanish;
+
+  const handleCardClick = () => {
+    setIsFlipped(!isFlipped);
+  };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-secondary">
@@ -88,27 +91,38 @@ export default function Home() {
         </SelectContent>
       </Select>
 
-      <Card className="w-full max-w-md mt-4">
-        <CardContent className="p-6 flex flex-col items-center">
-          <div className="text-xl font-semibold mb-4">
-            {languageSide === 'polish' ? currentCard.polish : currentCard.spanish}
-          </div>
-          <div className="flex gap-4">
-            <Button variant="outline" onClick={markAsDontKnow} className="bg-red-500 text-white hover:bg-red-700">
-              Don't know yet
-            </Button>
-            <Button onClick={markAsGotIt} className="bg-green-500 text-white hover:bg-green-700">
-              Got it
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="relative w-full max-w-md mt-4">
+        <Card className={`w-full h-48 transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+          <CardContent
+            className="absolute inset-0 flex items-center justify-center p-6 backface-hidden"
+            onClick={handleCardClick}
+          >
+            <div className="text-xl font-semibold">{cardContent}</div>
+          </CardContent>
+          <CardContent
+            className="absolute inset-0 flex items-center justify-center p-6 rotate-y-180 backface-hidden"
+            onClick={handleCardClick}
+          >
+            <div className="text-xl font-semibold">
+              {languageSide === 'polish' ? currentCard.spanish : currentCard.polish}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       <div className="mt-4 text-gray-600">Flashcards remaining: {remainingCardsCount}</div>
 
       <Button variant="link" onClick={resetProgress} className="mt-4">
         Reset Progress
       </Button>
+      <div className="flex gap-4 mt-4">
+        <Button variant="outline" onClick={markAsDontKnow} className="bg-red-500 text-white hover:bg-red-700">
+          Don't know yet
+        </Button>
+        <Button onClick={markAsGotIt} className="bg-green-500 text-white hover:bg-green-700">
+          Got it
+        </Button>
+      </div>
     </div>
   );
 }
