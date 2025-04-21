@@ -129,7 +129,7 @@ const technologiaTransportMiejscaFlashcards: Flashcard[] = [
     { id: 160, polish: 'grób', spanish: 'la tumba', gotIt: false }, // Miejsce
     { id: 161, polish: 'płonąć', spanish: 'arder', gotIt: false }, // W kontekście ogniska/pożaru miejsca
     { id: 162, polish: 'słuchawki', spanish: 'los auriculares', gotIt: false },
-  ]; // ~53 pozycje
+]; // ~53 pozycje
 
 // Kategoria 3: Dom, Jedzenie, Cechy i Czas Wolny
 const domJedzenieCzasWolnyFlashcards: Flashcard[] = [
@@ -192,7 +192,7 @@ const domJedzenieCzasWolnyFlashcards: Flashcard[] = [
     { id: 158, polish: 'szermierka', spanish: 'la esgrima', gotIt: false }, // Sport/Czas wolny
     { id: 164, polish: 'jestem zmotywowany', spanish: 'estoy arriba', gotIt: false }, // Stan/Cecha
     { id: 165, polish: 'mózg', spanish: 'el cerebro', gotIt: false }, // Ciało
-  ]; // ~58 pozycji
+]; // ~58 pozycji
 
 const initialFlashcards = spoleczenstwoPracaPojeciaFlashcards;
 
