@@ -39,14 +39,19 @@ export default function Home() {
 
   useEffect(() => {
     const savedState = localStorage.getItem('flashcardState');
+    const savedIndex = localStorage.getItem('currentCardIndex');
     if (savedState) {
       setFlashcards(JSON.parse(savedState));
+    }
+    if (savedIndex) {
+      setCurrentCardIndex(parseInt(savedIndex, 10));
     }
   }, []);
 
   useEffect(() => {
     localStorage.setItem('flashcardState', JSON.stringify(flashcards));
-  }, [flashcards]);
+    localStorage.setItem('currentCardIndex', currentCardIndex.toString());
+  }, [flashcards, currentCardIndex]);
 
   const markAsGotIt = () => {
     const updatedFlashcards = [...flashcards];
@@ -166,3 +171,4 @@ export default function Home() {
     </div>
   );
 }
+
