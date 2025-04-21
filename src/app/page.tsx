@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from "@/components/ui/checkbox"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface Flashcard {
   id: number;
@@ -36,6 +37,7 @@ export default function Home() {
   const [languageSide, setLanguageSide] = useState<'polish' | 'spanish'>('polish');
   const [isFlipped, setIsFlipped] = useState(false);
   const [isRandom, setIsRandom] = useState(false);
+  const [openAllWords, setOpenAllWords] = useState(false);
 
   useEffect(() => {
     const savedState = localStorage.getItem('flashcardState');
@@ -108,7 +110,13 @@ export default function Home() {
     setIsFlipped(!isFlipped);
   };
 
-  const displayedWord = isFlipped ? currentCard.spanish : currentCard.polish;
+  const displayedWord = isFlipped
+    ? languageSide === 'polish'
+      ? currentCard.spanish
+      : currentCard.polish
+    : languageSide === 'polish'
+      ? currentCard.polish
+      : currentCard.spanish;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-secondary">
@@ -152,9 +160,6 @@ export default function Home() {
           if (checked) {
               setFlashcards(shuffleArray(flashcards));
           } else {
-              // If unchecking, you might want to revert to original order,
-              // which requires storing the original order somewhere.
-              // For simplicity, we'll just reset progress.
               resetProgress();
           }
         }} />
@@ -168,7 +173,30 @@ export default function Home() {
       <Button variant="link" onClick={resetProgress} className="mt-4">
         Reset Progress
       </Button>
+
+      <Dialog open={openAllWords} onOpenChange={setOpenAllWords}>
+        <DialogTrigger asChild>
+          <Button variant="outline" className="mt-4">
+            Show All Words
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>All Words</DialogTitle>
+            <DialogDescription>
+              Here's a list of all the words you're learning.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            {flashcards.map((card) => (
+              <div key={card.id} className="flex justify-between">
+                <span>{card.polish}</span>
+                <span>{card.spanish}</span>
+              </div>
+            ))}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
-
