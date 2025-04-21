@@ -71,7 +71,6 @@ export default function Home() {
     const remainingCards = flashcards.filter(card => !card.gotIt);
 
     if (remainingCards.length === 0) {
-      alert("Congratulations! You've learned all the words!");
       return;
     }
 
@@ -81,7 +80,6 @@ export default function Home() {
         .filter(index => index !== -1);
 
       if (unlearnedIndices.length === 0) {
-        alert("Congratulations! You've learned all the words!");
         return;
       }
 
@@ -117,6 +115,18 @@ export default function Home() {
     : languageSide === 'polish'
       ? currentCard.polish
       : currentCard.spanish;
+
+    if (remainingCardsCount === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-secondary">
+                <h1 className="text-2xl font-bold mb-4 text-primary">LinguaFlash</h1>
+                <p className="text-lg">All done!</p>
+                <Button variant="link" onClick={resetProgress} className="mt-4">
+                    Reset Progress
+                </Button>
+            </div>
+        );
+    }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-secondary">
@@ -157,11 +167,6 @@ export default function Home() {
       <div className="flex items-center mt-2">
         <Checkbox id="random" checked={isRandom} onCheckedChange={(checked) => {
           setIsRandom(checked);
-          if (checked) {
-              setFlashcards(shuffleArray(flashcards));
-          } else {
-              resetProgress();
-          }
         }} />
         <label htmlFor="random" className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed">
           Random
@@ -200,4 +205,3 @@ export default function Home() {
     </div>
   );
 }
-
