@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Checkbox } from "@/components/ui/checkbox"
 
 interface Flashcard {
   id: number;
@@ -19,11 +20,22 @@ const initialFlashcards: Flashcard[] = [
   { id: 4, polish: 'Słońce', spanish: 'Sol', gotIt: false },
 ];
 
+// Fisher-Yates shuffle algorithm
+function shuffleArray<T>(array: T[]): T[] {
+  const newArray = [...array];
+  for (let i = newArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  }
+  return newArray;
+}
+
 export default function Home() {
   const [flashcards, setFlashcards] = useState<Flashcard[]>(initialFlashcards);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [languageSide, setLanguageSide] = useState<'polish' | 'spanish'>('polish');
   const [isFlipped, setIsFlipped] = useState(false);
+  const [isRandom, setIsRandom] = useState(false);
 
   useEffect(() => {
     const savedState = localStorage.getItem('flashcardState');
@@ -48,15 +60,31 @@ export default function Home() {
   };
 
   const goToNextCard = () => {
+    let nextIndex = currentCardIndex;
     const remainingCards = flashcards.filter(card => !card.gotIt);
+
     if (remainingCards.length === 0) {
       alert("Congratulations! You've learned all the words!");
       return;
     }
-    let nextIndex = currentCardIndex;
-    do {
-      nextIndex = (nextIndex + 1) % flashcards.length;
-    } while (flashcards[nextIndex].gotIt);
+
+    if (isRandom) {
+      const unlearnedIndices = flashcards
+        .map((card, index) => (!card.gotIt ? index : -1))
+        .filter(index => index !== -1);
+
+      if (unlearnedIndices.length === 0) {
+        alert("Congratulations! You've learned all the words!");
+        return;
+      }
+
+      nextIndex = unlearnedIndices[Math.floor(Math.random() * unlearnedIndices.length)];
+    } else {
+      do {
+        nextIndex = (nextIndex + 1) % flashcards.length;
+      } while (flashcards[nextIndex].gotIt);
+    }
+
     setCurrentCardIndex(nextIndex);
     setIsFlipped(false);
   };
@@ -94,7 +122,7 @@ export default function Home() {
       <div className="relative w-full max-w-md mt-4">
         <Card className={`w-full h-48 transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
           <CardContent
-            className="absolute inset-0 flex items-center justify-center p-6 backface-hidden"
+            className="absolute inset-0 flex items-center justify-center p-6 backface-hidden cursor-pointer"
             onClick={handleCardClick}
           >
             <div className="text-xl font-semibold">
@@ -111,6 +139,23 @@ export default function Home() {
         <Button onClick={markAsGotIt} className="bg-green-500 text-white hover:bg-green-700">
           Got it
         </Button>
+      </div>
+
+      <div className="flex items-center mt-2">
+        <Checkbox id="random" checked={isRandom} onCheckedChange={(checked) => {
+          setIsRandom(checked);
+          if (checked) {
+              setFlashcards(shuffleArray(flashcards));
+          } else {
+              // If unchecking, you might want to revert to original order,
+              // which requires storing the original order somewhere.
+              // For simplicity, we'll just reset progress.
+              resetProgress();
+          }
+        }} />
+        <label htmlFor="random" className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed">
+          Random
+        </label>
       </div>
 
       <div className="mt-4 text-gray-600">Flashcards remaining: {remainingCardsCount}</div>
