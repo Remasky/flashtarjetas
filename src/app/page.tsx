@@ -21,6 +21,13 @@ const initialFlashcards: Flashcard[] = [
   { id: 4, polish: 'Słońce', spanish: 'Sol', gotIt: false },
 ];
 
+const secondFlashcards: Flashcard[] = [
+    { id: 5, polish: 'Pies', spanish: 'Perro', gotIt: false },
+    { id: 6, polish: 'Kot', spanish: 'Gato', gotIt: false },
+    { id: 7, polish: 'Drzewo', spanish: 'Árbol', gotIt: false },
+    { id: 8, polish: 'Woda', spanish: 'Agua', gotIt: false },
+  ];
+
 function shuffleArray<T>(array: T[]): T[] {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -28,9 +35,11 @@ function shuffleArray<T>(array: T[]): T[] {
     [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
   }
   return newArray;
+  return newArray;
 }
 
 export default function Home() {
+  const [selectedSet, setSelectedSet] = useState<'initial' | 'second'>('initial');
   const [flashcards, setFlashcards] = useState<Flashcard[]>(initialFlashcards);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [languageSide, setLanguageSide] = useState<'polish' | 'spanish'>('polish');
@@ -39,20 +48,37 @@ export default function Home() {
   const [openAllWords, setOpenAllWords] = useState(false);
 
   useEffect(() => {
-    const savedState = localStorage.getItem('flashcardState');
-    const savedIndex = localStorage.getItem('currentCardIndex');
+      const savedSet = localStorage.getItem('selectedSet') as 'initial' | 'second' | null;
+      if (savedSet) {
+          setSelectedSet(savedSet);
+      }
+  }, []);
+
+  useEffect(() => {
+      localStorage.setItem('selectedSet', selectedSet);
+      if (selectedSet === 'initial') {
+          setFlashcards(initialFlashcards);
+      } else {
+          setFlashcards(secondFlashcards);
+      }
+      setCurrentCardIndex(0);
+  }, [selectedSet]);
+
+  useEffect(() => {
+    const savedState = localStorage.getItem(`flashcardState_${selectedSet}`);
+    const savedIndex = localStorage.getItem(`currentCardIndex_${selectedSet}`);
     if (savedState) {
       setFlashcards(JSON.parse(savedState));
     }
     if (savedIndex) {
       setCurrentCardIndex(parseInt(savedIndex, 10));
     }
-  }, []);
+  }, [selectedSet]);
 
   useEffect(() => {
-    localStorage.setItem('flashcardState', JSON.stringify(flashcards));
-    localStorage.setItem('currentCardIndex', currentCardIndex.toString());
-  }, [flashcards, currentCardIndex]);
+    localStorage.setItem(`flashcardState_${selectedSet}`, JSON.stringify(flashcards));
+    localStorage.setItem(`currentCardIndex_${selectedSet}`, currentCardIndex.toString());
+  }, [flashcards, currentCardIndex, selectedSet]);
 
   const markAsGotIt = () => {
     const updatedFlashcards = [...flashcards];
@@ -65,44 +91,44 @@ export default function Home() {
     goToNextCard();
   };
 
-  const goToNextCard = () => {
-    let nextIndex = currentCardIndex;
-    const remainingCards = flashcards.filter(card => !card.gotIt);
+    const goToNextCard = () => {
+        let nextIndex = currentCardIndex;
+        const remainingCards = flashcards.filter(card => !card.gotIt);
 
-    if (remainingCards.length === 0) {
-      return;
-    }
-
-    if (isRandom) {
-        let unlearnedIndices = flashcards
-            .map((card, index) => (!card.gotIt ? index : -1))
-            .filter(index => index !== -1);
-
-        if (unlearnedIndices.length === 0) {
+        if (remainingCards.length === 0) {
             return;
         }
 
-        // Ensure nextIndex is different from currentCardIndex if possible
-        if (unlearnedIndices.length > 1) {
-            do {
-                nextIndex = unlearnedIndices[Math.floor(Math.random() * unlearnedIndices.length)];
-            } while (nextIndex === currentCardIndex);
-        } else {
-            nextIndex = unlearnedIndices[0];
-        }
-    } else {
-        let tempNextIndex = nextIndex;
-        do {
-            tempNextIndex = (tempNextIndex + 1) % flashcards.length;
-            if (!flashcards[tempNextIndex].gotIt) {
-                nextIndex = tempNextIndex;
-                break;
+        if (isRandom) {
+            let unlearnedIndices = flashcards
+                .map((card, index) => (!card.gotIt ? index : -1))
+                .filter(index => index !== -1);
+
+            if (unlearnedIndices.length === 0) {
+                return;
             }
-        } while (tempNextIndex !== nextIndex);
-    }
-    setCurrentCardIndex(nextIndex);
-    setIsFlipped(false);
-};
+
+            if (unlearnedIndices.length > 1) {
+                do {
+                    nextIndex = unlearnedIndices[Math.floor(Math.random() * unlearnedIndices.length)];
+                } while (nextIndex === currentCardIndex);
+            } else {
+                nextIndex = unlearnedIndices[0];
+            }
+        } else {
+            let tempNextIndex = nextIndex;
+            do {
+                tempNextIndex = (tempNextIndex + 1) % flashcards.length;
+                if (!flashcards[tempNextIndex].gotIt) {
+                    nextIndex = tempNextIndex;
+                    break;
+                }
+            } while (tempNextIndex !== nextIndex);
+        }
+
+        setCurrentCardIndex(nextIndex);
+        setIsFlipped(false);
+    };
 
 
   const resetProgress = () => {
@@ -130,7 +156,7 @@ export default function Home() {
     if (remainingCardsCount === 0) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-secondary">
-                <h1 className="text-2xl font-bold mb-4 text-primary">LinguaFlash</h1>
+                <h1 className="text-2xl font-bold mb-4 text-primary"></h1>
                 <p className="text-lg">All done!</p>
                 <Button variant="link" onClick={resetProgress} className="mt-4">
                     Reset Progress
@@ -142,6 +168,16 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-secondary">
       <h1 className="text-2xl font-bold mb-4 text-primary">LinguaFlash</h1>
+
+        <Select onValueChange={(value) => setSelectedSet(value as 'initial' | 'second')} defaultValue={selectedSet}>
+            <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select Flashcard Set" />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectItem value="initial">Set 1</SelectItem>
+                <SelectItem value="second">Set 2</SelectItem>
+            </SelectContent>
+        </Select>
 
       <Select onValueChange={(value) => setLanguageSide(value as 'polish' | 'spanish')} defaultValue="polish">
         <SelectTrigger className="w-[180px]">
@@ -159,7 +195,7 @@ export default function Home() {
             className={`absolute inset-0 flex items-center justify-center p-6 backface-hidden cursor-pointer ${isFlipped ? 'bg-yellow-100' : ''}`}
             onClick={handleCardClick}
           >
-            <div className="text-xl font-semibold">
+            <div className="text-xl font-semibold unselectable">
               {displayedWord}
             </div>
           </CardContent>
@@ -167,24 +203,22 @@ export default function Home() {
       </div>
 
       <div className="flex gap-4 mt-4">
-        <Button variant="outline" onClick={markAsDontKnow} className="bg-red-500 text-white hover:bg-red-700">
+        <Button variant="outline" onClick={markAsDontKnow} className="bg-red-500 text-white hover:bg-red-700 unselectable">
           Don't know yet
         </Button>
-        <Button onClick={markAsGotIt} className="bg-green-500 text-white hover:bg-green-700">
+        <Button onClick={markAsGotIt} className="bg-green-500 text-white hover:bg-green-700 unselectable">
           Got it
         </Button>
       </div>
 
       <div className="flex items-center mt-2">
-        <Checkbox id="random" checked={isRandom} onCheckedChange={(checked) => {
-          setIsRandom(checked);
-        }} />
+        <Checkbox id="random" checked={isRandom} onChange={(e) => setIsRandom(e.target.checked)} />
         <label htmlFor="random" className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed">
           Random
         </label>
       </div>
 
-      <div className="mt-4 text-gray-600">Flashcards remaining: {remainingCardsCount}</div>
+      <div className="mt-4 text-gray-600">Flashcards remaining: {remainingCardsCount}/{flashcards.length}</div>
 
       <Button variant="link" onClick={resetProgress} className="mt-4">
         Reset Progress
@@ -206,8 +240,8 @@ export default function Home() {
           <div className="grid gap-4 py-4">
             {flashcards.map((card) => (
               <div key={card.id} className="flex justify-between">
-                <span>{card.polish} {card.gotIt && '✅'}</span>
-                <span>{card.spanish} {card.gotIt && '✅'}</span>
+                <span>{card.polish}</span>
+                <span>{card.spanish} {card.gotIt ? '✅' : ''}</span>
               </div>
             ))}
           </div>
@@ -216,4 +250,3 @@ export default function Home() {
     </div>
   );
 }
-

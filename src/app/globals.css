@@ -78,6 +78,13 @@ body {
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 }
+.unselectable {
+  -moz-user-select: -moz-none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+}
 
 @layer base {
   * {
