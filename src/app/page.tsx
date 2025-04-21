@@ -21,7 +21,6 @@ const initialFlashcards: Flashcard[] = [
   { id: 4, polish: 'Słońce', spanish: 'Sol', gotIt: false },
 ];
 
-// Fisher-Yates shuffle algorithm
 function shuffleArray<T>(array: T[]): T[] {
   const newArray = [...array];
   for (let i = newArray.length - 1; i > 0; i--) {
@@ -75,24 +74,38 @@ export default function Home() {
     }
 
     if (isRandom) {
-      const unlearnedIndices = flashcards
-        .map((card, index) => (!card.gotIt ? index : -1))
-        .filter(index => index !== -1);
+        let unlearnedIndices = flashcards
+            .map((card, index) => (!card.gotIt ? index : -1))
+            .filter(index => index !== -1);
 
-      if (unlearnedIndices.length === 0) {
-        return;
-      }
+        if (unlearnedIndices.length === 0) {
+            return;
+        }
 
-      nextIndex = unlearnedIndices[Math.floor(Math.random() * unlearnedIndices.length)];
+        // Ensure nextIndex is different from currentCardIndex if possible
+        if (unlearnedIndices.length > 1) {
+            do {
+                nextIndex = unlearnedIndices[Math.floor(Math.random() * unlearnedIndices.length)];
+            } while (nextIndex === currentCardIndex);
+        } else {
+            nextIndex = unlearnedIndices[0];
+        }
     } else {
-      do {
-        nextIndex = (nextIndex + 1) % flashcards.length;
-      } while (flashcards[nextIndex].gotIt);
+        let tempNextIndex = nextIndex;
+        do {
+            tempNextIndex = (tempNextIndex + 1) % flashcards.length;
+            if (!flashcards[tempNextIndex].gotIt) {
+                nextIndex = tempNextIndex;
+                break;
+            }
+        } while (tempNextIndex !== nextIndex);
     }
+
 
     setCurrentCardIndex(nextIndex);
     setIsFlipped(false);
-  };
+};
+
 
   const resetProgress = () => {
     const resetFlashcards = flashcards.map(card => ({ ...card, gotIt: false }));
@@ -205,4 +218,3 @@ export default function Home() {
     </div>
   );
 }
-
