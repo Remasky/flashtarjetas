@@ -50,7 +50,7 @@ export default function Home() {
   useEffect(() => {
       const savedSet = localStorage.getItem('selectedSet') as 'initial' | 'second' | null;
       if (savedSet) {
-          setSelectedSet(savedSet);
+          setSelectedSet(savedSet === 'initial' ? 'initial' : 'second');
       }
   }, []);
 
@@ -250,3 +250,4 @@ export default function Home() {
     </div>
   );
 }
+
