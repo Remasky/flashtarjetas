@@ -8,6 +8,13 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area"
 
+interface WordSet {
+    id: string;
+    title: string;
+    flashcards: Flashcard[];
+}
+
+
 interface Flashcard {
   id: number;
   polish: string;
@@ -195,11 +202,23 @@ const domJedzenieCzasWolnyFlashcards: Flashcard[] = [
     { id: 165, polish: 'mózg', spanish: 'el cerebro', gotIt: false }, // Ciało
 ]; // ~58 pozycji
 
-const initialFlashcards = spoleczenstwoPracaPojeciaFlashcards;
-
-const secondFlashcards = technologiaTransportMiejscaFlashcards;
-
-const thirdFlashcards = domJedzenieCzasWolnyFlashcards;
+const wordSets: WordSet[] = [
+    {
+        id: 'spoleczenstwoPracaPojecia',
+        title: 'Społeczeństwo, Praca i Pojęcia',
+        flashcards: spoleczenstwoPracaPojeciaFlashcards,
+    },
+    {
+        id: 'technologiaTransportMiejsca',
+        title: 'Technologia, Transport i Miejsca',
+        flashcards: technologiaTransportMiejscaFlashcards,
+    },
+    {
+        id: 'domJedzenieCzasWolny',
+        title: 'Dom, Jedzenie i Czas Wolny',
+        flashcards: domJedzenieCzasWolnyFlashcards,
+    },
+];
 
 function shuffleArray<T>(array: T[]): T[] {
   const newArray = [...array];
@@ -211,8 +230,8 @@ function shuffleArray<T>(array: T[]): T[] {
 }
 
 export default function Home() {
-  const [selectedSet, setSelectedSet] = useState<'spoleczenstwoPracaPojecia' | 'technologiaTransportMiejsca' | 'domJedzenieCzasWolny'>('spoleczenstwoPracaPojecia');
-  const [flashcards, setFlashcards] = useState<Flashcard[]>(initialFlashcards);
+  const [selectedSet, setSelectedSet] = useState<string>(wordSets[0].id);
+  const [flashcards, setFlashcards] = useState<Flashcard[]>(wordSets.find(set => set.id === selectedSet)?.flashcards || []);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [languageSide, setLanguageSide] = useState<'polish' | 'spanish'>('polish');
   const [isFlipped, setIsFlipped] = useState(false);
@@ -220,32 +239,21 @@ export default function Home() {
   const [openAllWords, setOpenAllWords] = useState(false);
 
   useEffect(() => {
-      const savedSet = localStorage.getItem('selectedSet') as 'spoleczenstwoPracaPojecia' | 'technologiaTransportMiejsca' | 'domJedzenieCzasWolny' | null;
+      const savedSet = localStorage.getItem('selectedSet');
       if (savedSet) {
-          setSelectedSet(savedSet as 'spoleczenstwoPracaPojecia' | 'technologiaTransportMiejsca' | 'domJedzenieCzasWolny');
+          setSelectedSet(savedSet);
       }
   }, []);
 
   useEffect(() => {
       localStorage.setItem('selectedSet', selectedSet);
-      switch (selectedSet) {
-        case 'spoleczenstwoPracaPojecia':
-            setFlashcards(spoleczenstwoPracaPojeciaFlashcards);
-            break;
-        case 'technologiaTransportMiejsca':
-            setFlashcards(technologiaTransportMiejscaFlashcards);
-            break;
-        case 'domJedzenieCzasWolny':
-            setFlashcards(domJedzenieCzasWolnyFlashcards);
-            break;
-        default:
-            setFlashcards(spoleczenstwoPracaPojeciaFlashcards);
-    }
+      const currentSet = wordSets.find(set => set.id === selectedSet);
+      setFlashcards(currentSet?.flashcards || []);
       setCurrentCardIndex(0);
       setIsFlipped(false);
   }, [selectedSet]);
 
-  useEffect(() => {
+    useEffect(() => {
     const savedState = localStorage.getItem(`flashcardState_${selectedSet}`);
     const savedIndex = localStorage.getItem(`currentCardIndex_${selectedSet}`);
     if (savedState) {
@@ -354,37 +362,41 @@ export default function Home() {
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-secondary">
       <h1 className="text-2xl font-bold mb-4 text-primary">FlashTarjetas</h1>
 
-        <Select onValueChange={(value) => setSelectedSet(value as 'spoleczenstwoPracaPojecia' | 'technologiaTransportMiejsca' | 'domJedzenieCzasWolny')} defaultValue={selectedSet}>
+        <Select onValueChange={(value) => setSelectedSet(value)} defaultValue={selectedSet}>
             <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Select Flashcard Set" />
             </SelectTrigger>
             <SelectContent>
-                <SelectItem value="spoleczenstwoPracaPojecia">Społeczeństwo, Praca i Pojęcia</SelectItem>
-                <SelectItem value="technologiaTransportMiejsca">Technologia, Transport i Miejsca</SelectItem>
-                <SelectItem value="domJedzenieCzasWolny">Dom, Jedzenie i Czas Wolny</SelectItem>
+                {wordSets.map(set => (
+                    <SelectItem key={set.id} value={set.id}>
+                        {set.title}
+                    </SelectItem>
+                ))}
             </SelectContent>
         </Select>
-
+        
       <Select onValueChange={(value) => setLanguageSide(value as 'polish' | 'spanish')} defaultValue="polish">
         <SelectTrigger className="w-[180px]">
           <SelectValue placeholder="Select Language" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="polish">Polish</SelectItem>
-          <SelectItem value="spanish">Spanish</SelectItem>
+          <SelectItem value="polish">Polish 🇵🇱</SelectItem>
+          <SelectItem value="spanish">Spanish 🇪🇸</SelectItem>
         </SelectContent>
       </Select>
 
       <div className="relative w-full max-w-md mt-4">
         <Card className={`w-full h-48 transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
-          <CardContent
-            className={`absolute inset-0 flex items-center justify-center p-6 backface-hidden cursor-pointer ${isFlipped ? 'bg-yellow-100' : ''}`}
-            onClick={handleCardClick}
-          >
-            <div className="text-xl font-semibold unselectable">
-              {displayedWord}
-            </div>
-          </CardContent>
+            <CardContent className="absolute inset-0 flex items-center justify-center p-6 backface-hidden cursor-pointer" onClick={handleCardClick}>
+                <div className="text-xl font-semibold unselectable">
+                    {languageSide === 'polish' ? currentCard.polish : currentCard.spanish}
+                </div>
+            </CardContent>
+            <CardContent className="absolute inset-0 flex items-center justify-center p-6 backface-hidden cursor-pointer rotate-y-180 bg-yellow-100" onClick={handleCardClick}>
+                <div className="text-xl font-semibold unselectable">
+                    {languageSide === 'polish' ? currentCard.spanish : currentCard.polish}
+                </div>
+            </CardContent>
         </Card>
       </div>
 
@@ -398,9 +410,7 @@ export default function Home() {
       </div>
 
       <div className="flex items-center mt-2">
-        <Checkbox id="random" checked={isRandom} onChange={(e) => {
-          setIsRandom(e.target.checked);
-        }} />
+        <Checkbox id="random" checked={isRandom} onCheckedChange={setIsRandom} />
         <label htmlFor="random" className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed">
           Random
         </label>
