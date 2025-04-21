@@ -398,7 +398,9 @@ export default function Home() {
       </div>
 
       <div className="flex items-center mt-2">
-        <Checkbox id="random" checked={isRandom} onChange={(e) => setIsRandom(e.target.checked)} />
+        <Checkbox id="random" checked={isRandom} onChange={(e) => {
+          setIsRandom(e.target.checked);
+        }} />
         <label htmlFor="random" className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed">
           Random
         </label>
@@ -438,3 +440,4 @@ export default function Home() {
     </div>
   );
 }
+
