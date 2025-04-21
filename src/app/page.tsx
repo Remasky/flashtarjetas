@@ -49,7 +49,7 @@ export default function Home() {
 
   const goToNextCard = () => {
     const remainingCards = flashcards.filter(card => !card.gotIt);
-    if (remainingCards.length === 1) {
+    if (remainingCards.length === 0) {
       alert("Congratulations! You've learned all the words!");
       return;
     }
@@ -75,6 +75,8 @@ export default function Home() {
     setIsFlipped(!isFlipped);
   };
 
+  const displayedWord = isFlipped ? currentCard.spanish : currentCard.polish;
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-secondary">
       <h1 className="text-2xl font-bold mb-4 text-primary">LinguaFlash</h1>
@@ -96,15 +98,7 @@ export default function Home() {
             onClick={handleCardClick}
           >
             <div className="text-xl font-semibold">
-              {currentCard.polish}
-            </div>
-          </CardContent>
-          <CardContent
-            className="absolute inset-0 flex items-center justify-center p-6 rotate-y-180 backface-hidden"
-            onClick={handleCardClick}
-          >
-            <div className="text-xl font-semibold">
-              {currentCard.spanish}
+              {displayedWord}
             </div>
           </CardContent>
         </Card>
@@ -127,5 +121,3 @@ export default function Home() {
     </div>
   );
 }
-
-    
