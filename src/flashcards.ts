@@ -4,200 +4,19 @@ export interface Flashcard {
   id: number;
   polish: string;
   spanish: string;
-  example: string;
+  example?: string;
   gotIt: boolean;
 }
 
-// Kategoria 1: Społeczeństwo, Praca i Pojęcia Abstrakcyjne
-export const spoleczenstwoPracaPojeciaFlashcards: Omit<Flashcard, 'example'>[] = [
-  { id: 3, polish: 'opowiadać', spanish: 'narrar, contar', gotIt: false },
-  { id: 4, polish: 'odciążać', spanish: 'aliviar', gotIt: false },
-  { id: 8, polish: 'należeć', spanish: 'pertenecer', gotIt: false }, // Duplikat ID 16
-  { id: 13, polish: 'płatność z góry', spanish: 'pago por adelantado', gotIt: false },
-  { id: 16, polish: 'należeć', spanish: 'pertenecer', gotIt: false }, // Duplikat ID 8
-  { id: 18, polish: 'pieczątka', spanish: 'el sello', gotIt: false },
-  { id: 19, polish: 'gościć', spanish: 'acoger', gotIt: false },
-  { id: 20, polish: 'zagrożenie', spanish: 'la amenaza', gotIt: false },
-  { id: 21, polish: 'odbywać służbę wojskową', spanish: 'hacer la mili', gotIt: false },
-  { id: 24, polish: 'myśliwy', spanish: 'el cazador', gotIt: false },
-  { id: 26, polish: 'ubezpieczenie', spanish: 'el seguro', gotIt: false },
-  { id: 27, polish: 'budżet', spanish: 'el presupuesto', gotIt: false },
-  { id: 30, polish: 'właściciel', spanish: 'el dueño', gotIt: false },
-  { id: 32, polish: 'odliczanie', spanish: 'cuenta atrás', gotIt: false },
-  { id: 33, polish: 'kosztować dużo wysiłku', spanish: 'costarme', gotIt: false },
-  { id: 34, polish: 'pokonać', spanish: 'superar, vencer', gotIt: false },
-  { id: 36, polish: 'zapisany', spanish: 'inscrito', gotIt: false },
-  { id: 40, polish: 'podejrzewać', spanish: 'sospechar', gotIt: false },
-  { id: 43, polish: 'konferencja', spanish: 'la conferencia', gotIt: false },
-  { id: 44, polish: 'uczestnik', spanish: 'el participante', gotIt: false },
-  { id: 45, polish: 'cud', spanish: 'el milagro', gotIt: false },
-  { id: 63, polish: 'zazdrościć', spanish: 'envidiar', gotIt: false },
-  { id: 74, polish: 'przymiotnik', spanish: 'el adjetivo', gotIt: false },
-  { id: 75, polish: 'czasownik', spanish: 'el verbo', gotIt: false },
-  { id: 76, polish: 'rzeczownik', spanish: 'el sustantivo', gotIt: false },
-  { id: 77, polish: 'pogrzeb', spanish: 'el entierro', gotIt: false },
-  { id: 79, polish: 'żałoba', spanish: 'el luto', gotIt: false },
-  { id: 91, polish: 'premiera', spanish: 'el estreno', gotIt: false },
-  { id: 92, polish: 'okładka', spanish: 'la portada', gotIt: false }, // Może być też w Miejsca/Technologia (książka)
-  { id: 93, polish: 'spis treści', spanish: 'el índice', gotIt: false }, // Może być też w Miejsca/Technologia (książka)
-  { id: 101, polish: 'olimpiada', spanish: 'la olimpiada, juegos Olímpicos', gotIt: false },
-  { id: 102, polish: 'medal', spanish: 'la medalla', gotIt: false },
-  { id: 103, polish: 'zawody', spanish: 'la competencia', gotIt: false },
-  { id: 104, polish: 'pochodnia', spanish: 'la antorcha', gotIt: false }, // Powiązane z Olimpiadą
-  { id: 105, polish: 'ceremonia otwarcia', spanish: 'la ceremonia de apertura', gotIt: false },
-  { id: 106, polish: 'ostrzegać', spanish: 'avisar', gotIt: false },
-  { id: 113, polish: 'podanie', spanish: 'la solicitud', gotIt: false }, // np. o pracę
-  { id: 114, polish: 'wymagania', spanish: 'los requisitos', gotIt: false },
-  { id: 120, polish: 'poseł', spanish: 'el diputado', gotIt: false },
-  { id: 121, polish: 'przemówienie', spanish: 'el discurso', gotIt: false },
-  { id: 124, polish: 'oferta pracy', spanish: 'la oferta de trabajo', gotIt: false },
-  { id: 125, polish: 'umiejętności', spanish: 'los habilidades', gotIt: false },
-  { id: 126, polish: 'przywództwo', spanish: 'el liderazgo', gotIt: false },
-  { id: 127, polish: 'karta do głosowania', spanish: 'la boleta', gotIt: false },
-  { id: 130, polish: 'kibic', spanish: 'el aficionado', gotIt: false }, // Powiązane ze sportem, ale też rola społeczna
-  { id: 132, polish: 'przemyt', spanish: 'el contrabando', gotIt: false },
-  { id: 133, polish: 'urząd celny', spanish: 'la aduana', gotIt: false },
-  { id: 134, polish: 'subskrybent', spanish: 'el suscriptor', gotIt: false },
-  { id: 135, polish: 'wyświetlenia', spanish: 'los visualizaciones', gotIt: false }, // Media społecznościowe/praca
-  { id: 148, polish: 'nadawca', spanish: 'el remitente', gotIt: false },
-  { id: 149, polish: 'trasa koncertowa', spanish: 'la gira', gotIt: false }, // Wydarzenie społeczne/praca
-  { id: 157, polish: 'platforma', spanish: 'plataforma', gotIt: false }, // Często w kontekście pracy/technologii
-  { id: 159, polish: 'błagać', spanish: 'mendigar', gotIt: false },
-  { id: 163, polish: 'wydajność', spanish: 'el rendimiento', gotIt: false },
-  { id: 166, polish: 'stanowisko', spanish: 'el puesto', gotIt: false },
-  { id: 167, polish: 'udawać', spanish: 'fingir', gotIt: false },
-  { id: 168, polish: 'strajk', spanish: 'la huelga', gotIt: false },
-  { id: 169, polish: 'zgadywać', spanish: 'adivinar', gotIt: false },
-  { id: 170, polish: 'zamiennik', spanish: 'el sustituto', gotIt: false },
-]; // ~59 pozycji
-
-// Kategoria 2: Technologia, Transport i Miejsca
-export const technologiaTransportMiejscaFlashcards: Omit<Flashcard, 'example'>[] = [
-  { id: 6, polish: 'witryna sklepowa', spanish: 'el escaparate/la vidriera', gotIt: false },
-  { id: 7, polish: 'dzwonek do drzwi', spanish: 'el timbre', gotIt: false },
-  { id: 9, polish: 'food truck', spanish: 'el camión de comida', gotIt: false }, // Transport + Jedzenie, tu jako pojazd
-  { id: 15, polish: 'klimatyzacja', spanish: 'el aire acondicionado', gotIt: false },
-  { id: 17, polish: 'hulajnoga elektryczna', spanish: 'el patinete eléctrico', gotIt: false },
-  { id: 22, polish: 'wokół', spanish: 'alrededor', gotIt: false }, // Określenie miejsca
-  { id: 23, polish: 'ognisko', spanish: 'la fogata', gotIt: false },
-  { id: 25, polish: 'kliknięcie', spanish: 'el clic', gotIt: false },
-  { id: 31, polish: 'grad', spanish: 'el granizo', gotIt: false }, // Zjawisko pogodowe/natura
-  { id: 35, polish: 'skrzydło', spanish: 'el ala', gotIt: false }, // Część samolotu/zwierzęcia
-  { id: 41, polish: 'wsiadać/wysiadać', spanish: 'subir/bajar', gotIt: false }, // Transport
-  { id: 42, polish: 'peron', spanish: 'el anden', gotIt: false },
-  { id: 64, polish: 'brzeg', spanish: 'la orilla', gotIt: false },
-  { id: 65, polish: 'mgła', spanish: 'la niebla', gotIt: false }, // Zjawisko pogodowe/natura
-  { id: 66, polish: 'krajobraz', spanish: 'el paisaje', gotIt: false },
-  { id: 70, polish: 'mur zamku', spanish: 'la muralla', gotIt: false }, // Duplikat ID 100
-  { id: 71, polish: 'wieża', spanish: 'el torre', gotIt: false },
-  { id: 72, polish: 'forteca', spanish: 'la fortaleza', gotIt: false },
-  { id: 78, polish: 'cmentarz', spanish: 'el cementerio', gotIt: false }, // Miejsce
-  { id: 80, polish: 'drukarka', spanish: 'la impresora', gotIt: false },
-  { id: 81, polish: 'scena koncertów', spanish: 'el escenario', gotIt: false }, // Miejsce, duplikat ID 150
-  { id: 82, polish: 'perkusja', spanish: 'la batería', gotIt: false }, // Instrument, obiekt
-  { id: 83, polish: 'maska samochodu', spanish: 'el capó', gotIt: false },
-  { id: 84, polish: 'kierownica', spanish: 'el volante', gotIt: false },
-  { id: 85, polish: 'silnik', spanish: 'el motor', gotIt: false },
-  { id: 86, polish: 'hamulec', spanish: 'el freno', gotIt: false },
-  { id: 99, polish: 'zaułek', spanish: 'el callejón', gotIt: false },
-  { id: 100, polish: 'mur obronny', spanish: 'la muralla', gotIt: false }, // Duplikat ID 70
-  { id: 107, polish: 'prognoza', spanish: 'el pronóstico', gotIt: false }, // Pogoda/Natura
-  { id: 108, polish: 'tęcza', spanish: 'el arcoiris', gotIt: false }, // Pogoda/Natura
-  { id: 109, polish: 'tankować', spanish: 'repostar el coche', gotIt: false },
-  { id: 110, polish: 'stacja benzynowa', spanish: 'la gasolinera', gotIt: false },
-  { id: 111, polish: 'paliwo', spanish: 'el combustible', gotIt: false },
-  { id: 112, polish: 'napełniać', spanish: 'llenar', gotIt: false }, // W kontekście np. baku
-  { id: 119, polish: 'stolik nocny', spanish: 'la mesita de noche', gotIt: false }, // Mebel/obiekt
-  { id: 137, polish: 'szlak', spanish: 'el sendero', gotIt: false },
-  { id: 138, polish: 'wodospad', spanish: 'la cascada', gotIt: false },
-  { id: 140, polish: 'wentylator', spanish: 'el ventilador', gotIt: false },
-  { id: 141, polish: 'cień', spanish: 'la sombra', gotIt: false }, // Związane z miejscem/naturą
-  { id: 142, polish: 'ograniczenie prędkości', spanish: 'el limite de velocidad', gotIt: false },
-  { id: 143, polish: 'punkt poboru opłat', spanish: 'el peaje', gotIt: false },
-  { id: 144, polish: 'rozbić się', spanish: 'estrellarse', gotIt: false }, // Transport
-  { id: 145, polish: 'duch', spanish: 'el fantasma, el espíritu', gotIt: false }, // Istota nadprzyrodzona, często związana z miejscem
-  { id: 146, polish: 'powiększać', spanish: 'alargar', gotIt: false }, // W kontekście obiektów/przestrzeni
-  { id: 147, polish: 'pasować', spanish: 'caber', gotIt: false }, // W kontekście obiektów/przestrzeni
-  { id: 150, polish: 'scena', spanish: 'el escenario', gotIt: false }, // Miejsce, duplikat ID 81
-  { id: 156, polish: 'plik', spanish: 'el archivo', gotIt: false },
-  { id: 160, polish: 'grób', spanish: 'la tumba', gotIt: false }, // Miejsce
-  { id: 161, polish: 'płonąć', spanish: 'arder', gotIt: false }, // W kontekście ogniska/pożaru miejsca
-  { id: 162, polish: 'słuchawki', spanish: 'los auriculares', gotIt: false },
-]; // ~53 pozycje
-
-// Kategoria 3: Dom, Jedzenie, Cechy i Czas Wolny
-export const domJedzenieCzasWolnyFlashcards: Omit<Flashcard, 'example'>[] = [
-  { id: 5, polish: 'guma do żucia', spanish: 'el chicle', gotIt: false },
-  { id: 10, polish: 'z dostawą', spanish: 'a domicilio', gotIt: false }, // Związane z jedzeniem/domem
-  { id: 11, polish: 'słony', spanish: 'salado', gotIt: false }, // Cecha/Jedzenie
-  { id: 12, polish: 'przyprawy', spanish: 'los condimentos', gotIt: false },
-  { id: 14, polish: 'okrągły', spanish: 'redondo', gotIt: false }, // Cecha
-  { id: 28, polish: 'podlewać', spanish: 'regar', gotIt: false }, // Dom/Ogród
-  { id: 29, polish: 'dziki (zwierzę)', spanish: 'salvaje', gotIt: false }, // Cecha/Zwierzę
-  { id: 37, polish: 'pianka', spanish: 'la espuma', gotIt: false }, // Może być jedzenie lub materiał
-  { id: 38, polish: 'prażyć, piec', spanish: 'tostar', gotIt: false },
-  { id: 39, polish: 'nieudany', spanish: 'fallido', gotIt: false }, // Cecha
-  { id: 46, polish: 'mocny', spanish: 'potente', gotIt: false }, // Cecha
-  { id: 47, polish: 'sportowy', spanish: 'deportivo', gotIt: false }, // Cecha/Czas wolny
-  { id: 48, polish: 'wytrzymały', spanish: 'resistente', gotIt: false }, // Cecha
-  { id: 49, polish: 'okulary do pływania', spanish: 'las gafas de natación', gotIt: false }, // Sport/Czas wolny
-  { id: 50, polish: 'chlor', spanish: 'el cloro', gotIt: false }, // Związane z basenem/pływaniem
-  { id: 51, polish: 'intensywnie', spanish: 'intensivamente', gotIt: false }, // Określenie (przysłówek)
-  { id: 52, polish: 'smaczny', spanish: 'sabroso', gotIt: false }, // Cecha/Jedzenie
-  { id: 53, polish: 'radosny', spanish: 'alegre', gotIt: false }, // Cecha
-  { id: 54, polish: 'zatłoczony', spanish: 'concurrido', gotIt: false }, // Cecha (miejsca, ale opis)
-  { id: 55, polish: 'odległy', spanish: 'lejano', gotIt: false }, // Cecha (miejsca, ale opis)
-  { id: 56, polish: 'relaksujący', spanish: 'relajante', gotIt: false }, // Cecha/Czas wolny
-  { id: 57, polish: 'niezapomniany', spanish: 'inolvidable', gotIt: false }, // Cecha
-  { id: 58, polish: 'ryzykowny', spanish: 'arriesgado', gotIt: false }, // Cecha
-  { id: 59, polish: 'cichy', spanish: 'silencioso', gotIt: false }, // Cecha
-  { id: 60, polish: 'zorganizowany', spanish: 'organizado', gotIt: false }, // Cecha
-  { id: 61, polish: 'stresujący', spanish: 'estresante', gotIt: false }, // Cecha
-  { id: 62, polish: 'konkurencyjny', spanish: 'competitivo', gotIt: false }, // Cecha/Sport
-  { id: 67, polish: 'ciężary', spanish: 'las pesas', gotIt: false }, // Sport/Czas wolny
-  { id: 68, polish: 'brzuszki', spanish: 'las abdominales', gotIt: false }, // Sport/Czas wolny
-  { id: 69, polish: 'rozciąganie', spanish: 'el estiramiento', gotIt: false }, // Sport/Czas wolny
-  { id: 73, polish: 'łucznik', spanish: 'el arquero', gotIt: false }, // Sport/Hobby/Rola
-  { id: 87, polish: 'mąka', spanish: 'la harina', gotIt: false },
-  { id: 88, polish: 'kromka', spanish: 'la rebanada', gotIt: false },
-  { id: 89, polish: 'chleb pełnoziarnisty', spanish: 'el pan integral', gotIt: false },
-  { id: 90, polish: 'mięta', spanish: 'la menta', gotIt: false },
-  { id: 94, polish: 'szaszłyk', spanish: 'la brocheta', gotIt: false },
-  { id: 95, polish: 'pieczeń, grillowane mięso', spanish: 'el asado', gotIt: false },
-  { id: 96, polish: 'stek', spanish: 'el churrasco', gotIt: false },
-  { id: 97, polish: 'wędzony', spanish: 'ahumado', gotIt: false }, // Cecha/Jedzenie
-  { id: 98, polish: 'osoba obsługująca grill', spanish: 'el parrillero', gotIt: false }, // Czas wolny/Rola
-  { id: 115, polish: 'mielenie', spanish: 'molienda', gotIt: false }, // Jedzenie
-  { id: 116, polish: 'kawa z odrobiną mleka', spanish: 'cortado', gotIt: false }, // Jedzenie/Picie
-  { id: 117, polish: 'palenie kawy', spanish: 'torrefacción', gotIt: false }, // Jedzenie
-  { id: 118, polish: 'pościel', spanish: 'la ropa de cama', gotIt: false }, // Dom
-  { id: 122, polish: 'podanie', spanish: 'el pase', gotIt: false }, // Sport
-  { id: 123, polish: 'strzał', spanish: 'el tiro', gotIt: false }, // Sport/Broń
-  { id: 128, polish: 'kaczka', spanish: 'un pato', gotIt: false }, // Zwierzę
-  { id: 129, polish: 'wiejski', spanish: 'rural', gotIt: false }, // Cecha (miejsca, ale opis)
-  { id: 131, polish: 'strzelać na bramkę', spanish: 'disparar/tirar a puerta', gotIt: false }, // Sport
-  { id: 136, polish: 'krem przeciwsłoneczny', spanish: 'la crema solar', gotIt: false }, // Czas wolny/Kosmetyk
-  { id: 139, polish: 'pot', spanish: 'el sudor', gotIt: false }, // Ciało/Wysiłek fizyczny
-  { id: 151, polish: 'schronisko', spanish: 'el refugio de animales', gotIt: false }, // Zwierzęta
-  { id: 152, polish: 'kość', spanish: 'el hueso', gotIt: false }, // Zwierzęta/Ciało
-  { id: 153, polish: 'obroża', spanish: 'el collar', gotIt: false }, // Zwierzęta
-  { id: 154, polish: 'szczeniak', spanish: 'el cachorro', gotIt: false }, // Zwierzęta
-  { id: 155, polish: 'smycz', spanish: 'la correa', gotIt: false }, // Zwierzęta
-  { id: 158, polish: 'szermierka', spanish: 'la esgrima', gotIt: false }, // Sport/Czas wolny
-  { id: 164, polish: 'jestem zmotywowany', spanish: 'estoy arriba', gotIt: false }, // Stan/Cecha
-  { id: 165, polish: 'mózg', spanish: 'el cerebro', gotIt: false }, // Ciało
-]; // ~58 pozycji
-
-
-export const spoleczenstwoPracaPojeciaFlashcardsFull: Flashcard[] = [
-  { id: 3, polish: 'opowiadać', spanish: 'narrar, contar', gotIt: false, example: 'Te **contaré** una historia.' },
-  { id: 4, polish: 'odciążać', spanish: 'aliviar', gotIt: false, example: 'Estoy aqui para **aliviarte** la carga.' },
-  { id: 8, polish: 'należeć', spanish: 'pertenecer', gotIt: false, example: 'Este objeto **pertenece** a mi familia.' },
+export const spoleczenstwoPracaPojeciaFlashcards: Flashcard[] = [
+  { id: 3, polish: 'opowiadać', spanish: 'narrar, contar', gotIt: false, example: 'Te **contaré** una historia.'},
+  { id: 4, polish: 'odciążać', spanish: 'aliviar', gotIt: false, example: 'Estoy aqui para **aliviarte** la carga.'},
+  { id: 8, polish: 'należeć', spanish: 'pertenecer', gotIt: false, example: 'Este objeto **pertenece** a mi familia.'},
   { id: 13, polish: 'płatność z góry', spanish: 'pago por adelantado', gotIt: false, example: 'Necesito el **pago por adelantado**.' },
   { id: 16, polish: 'należeć', spanish: 'pertenecer', gotIt: false, example: 'Este libro **pertenece** a la biblioteca.' },
   { id: 18, polish: 'pieczątka', spanish: 'el sello', gotIt: false, example: 'La carta tiene **el sello** del remitente.' },
   { id: 19, polish: 'gościć', spanish: 'acoger', gotIt: false, example: 'Nos complace **acoger** a los visitantes.' },
-  { id: 20, polish: 'zagrożenie', spanish: 'la amenaza', gotIt: false, example: 'Este es **la amenaza** más seria.' },
+  { id: 20, polish: 'zagrożenie', spanish: 'la amenaza', gotIt: false, example: 'Este es **la amenaza** más seria.' }, //TODO to jest zagrozeniem
   { id: 21, polish: 'odbywać służbę wojskową', spanish: 'hacer la mili', gotIt: false, example: 'Él tuvo que **hacer la mili** en su juventud.' },
   { id: 24, polish: 'myśliwy', spanish: 'el cazador', gotIt: false, example: '**El cazador** rastreaba la presa.' },
   { id: 26, polish: 'ubezpieczenie', spanish: 'el seguro', gotIt: false, example: 'Tengo un **seguro** de vida.' },
@@ -206,7 +25,7 @@ export const spoleczenstwoPracaPojeciaFlashcardsFull: Flashcard[] = [
   { id: 32, polish: 'odliczanie', spanish: 'cuenta atrás', gotIt: false, example: 'El **cuenta atrás** ha empezado.' },
   { id: 33, polish: 'kosztować dużo wysiłku', spanish: 'costarme', gotIt: false, example: 'Esta tarea va a **costarme**.' },
   { id: 34, polish: 'pokonać', spanish: 'superar, vencer', gotIt: false, example: 'Es difícil **superar** este obstáculo.' },
-  { id: 36, polish: 'zapisany', spanish: 'inscrito', gotIt: false, example: 'Ya estoy **inscrito** en el curso.' },
+  { id: 36, polish: 'zapisany', spanish: 'inscrito', gotIt: false, example: 'Ya estoy **inscrito** en el curso.' }, //TODO wpisany
   { id: 40, polish: 'podejrzewać', spanish: 'sospechar', gotIt: false, example: 'Empiezo a **sospechar** de él.' },
   { id: 43, polish: 'konferencja', spanish: 'la conferencia', gotIt: false, example: '**La conferencia** se celebra en el hotel.' },
   { id: 44, polish: 'uczestnik', spanish: 'el participante', gotIt: false, example: '**El participante** tiene que estar registrado.' },
@@ -227,13 +46,13 @@ export const spoleczenstwoPracaPojeciaFlashcardsFull: Flashcard[] = [
   { id: 105, polish: 'ceremonia otwarcia', spanish: 'la ceremonia de apertura', gotIt: false, example: '**La ceremonia de apertura** será impresionante.' },
   { id: 106, polish: 'ostrzegać', spanish: 'avisar', gotIt: false, example: 'Te tengo que **avisar** de los riesgos.' },
   { id: 113, polish: 'podanie', spanish: 'la solicitud', gotIt: false, example: 'Envía **la solicitud** de trabajo.' },
-  { id: 114, polish: 'wymagania', spanish: 'los requisitos', gotIt: false, example: 'Revisa **los requisitos** antes de postularte.' },
+  { id: 114, polish: 'wymagania', spanish: 'los requisitos', gotIt: false, example: 'Revisa **los requisitos** antes de postularte.' }, //TODO wymagania formalne
   { id: 120, polish: 'poseł', spanish: 'el diputado', gotIt: false, example: '**El diputado** tiene que ir a parlamento.' },
-  { id: 121, polish: 'przemówienie', spanish: 'el discurso', gotIt: false, example: '**El discurso** inspiró a mucha gente.' },
+  { id: 121, polish: 'przemówienie', spanish: 'el discurso', gotIt: false, example: '**El discurso** inspiró a mucha gente.' }, //TODO wygłoszenie przemówienia
   { id: 124, polish: 'oferta pracy', spanish: 'la oferta de trabajo', gotIt: false, example: '**La oferta de trabajo** es muy tentadora.' },
   { id: 125, polish: 'umiejętności', spanish: 'los habilidades', gotIt: false, example: 'Muestra **los habilidades** que posees.' },
   { id: 126, polish: 'przywództwo', spanish: 'el liderazgo', gotIt: false, example: '**El liderazgo** es clave en una empresa.' },
-  { id: 127, polish: 'karta do głosowania', spanish: 'la boleta', gotIt: false, example: 'Tienes que rellenar **la boleta**.' },
+  { id: 127, polish: 'karta do głosowania', spanish: 'la boleta', gotIt: false, example: 'Tienes que rellenar **la boleta**.' }, //TODO wypełnić karte do głosowania
   { id: 130, polish: 'kibic', spanish: 'el aficionado', gotIt: false, example: '**El aficionado** alentaba al equipo.' },
   { id: 132, polish: 'przemyt', spanish: 'el contrabando', gotIt: false, example: 'La policía detuvo **el contrabando**.' },
   { id: 133, polish: 'urząd celny', spanish: 'la aduana', gotIt: false, example: 'Hay que pasar por **la aduana**.' },
@@ -245,21 +64,21 @@ export const spoleczenstwoPracaPojeciaFlashcardsFull: Flashcard[] = [
   { id: 159, polish: 'błagać', spanish: 'mendigar', gotIt: false, example: 'No te voy a **mendigar** nada.' },
   { id: 163, polish: 'wydajność', spanish: 'el rendimiento', gotIt: false, example: '**El rendimiento** ha bajado este mes.' },
   { id: 166, polish: 'stanowisko', spanish: 'el puesto', gotIt: false, example: 'Ya tengo **el puesto** de trabajo.' },
-  { id: 167, polish: 'udawać', spanish: 'fingir', gotIt: false, example: 'No voy a **fingir** más.' },
-  { id: 168, polish: 'strajk', spanish: 'la huelga', gotIt: false, example: '**La huelga** fue multitudinaria.' },
-  { id: 169, polish: 'zgadywać', spanish: 'adivinar', gotIt: false, example: 'Tienes que **adivinar** qué tengo en la mano.' },
-  { id: 170, polish: 'zamiennik', spanish: 'el sustituto', gotIt: false, example: '**El sustituto** está capacitado.' },
+  { id: 167, polish: 'udawać', spanish: 'fingir', gotIt: false, example: 'No voy a **fingir** más.' }, //TODO symulowac, odgrywać
+  { id: 168, polish: 'strajk', spanish: 'la huelga', gotIt: false, example: '**La huelga** fue multitudinaria.' }, //TODO ogłosić strajk
+  { id: 169, polish: 'zgadywać', spanish: 'adivinar', gotIt: false, example: 'Tienes que **adivinar** qué tengo en la mano.' }, //TODO domyślic się
+  { id: 170, polish: 'zamiennik', spanish: 'el sustituto', gotIt: false, example: '**El sustituto** está capacitado.' }, //TODO zastępca,
 ];
-
+  
 // Kategoria 2: Technologia, Transport i Miejsca
-export const technologiaTransportMiejscaFlashcardsFull: Flashcard[] = [
+export const technologiaTransportMiejscaFlashcards: Flashcard[] = [
   { id: 6, polish: 'witryna sklepowa', spanish: 'el escaparate/la vidriera', gotIt: false, example: 'Mira **el escaparate** de esta tienda.' },
   { id: 7, polish: 'dzwonek do drzwi', spanish: 'el timbre', gotIt: false, example: 'Escucha, suena **el timbre**.' },
   { id: 9, polish: 'food truck', spanish: 'el camión de comida', gotIt: false, example: '**El camión de comida** tiene buenos precios.' },
   { id: 15, polish: 'klimatyzacja', spanish: 'el aire acondicionado', gotIt: false, example: '**El aire acondicionado** no funciona bien.' },
   { id: 17, polish: 'hulajnoga elektryczna', spanish: 'el patinete eléctrico', gotIt: false, example: 'Voy a comprarme **el patinete eléctrico**.' },
   { id: 22, polish: 'wokół', spanish: 'alrededor', gotIt: false, example: 'Hay mucha gente **alrededor**.' },
-  { id: 23, polish: 'ognisko', spanish: 'la fogata', gotIt: false, example: 'Nos reuniremos alrededor de **la fogata**.' },
+  { id: 23, polish: 'ognisko', spanish: 'la fogata', gotIt: false, example: 'Nos reuniremos alrededor de **la fogata**.' }, //TODO palenisko
   { id: 25, polish: 'kliknięcie', spanish: 'el clic', gotIt: false, example: 'Haz **el clic** aquí.' },
   { id: 31, polish: 'grad', spanish: 'el granizo', gotIt: false, example: '**El granizo** está cayendo fuerte.' },
   { id: 35, polish: 'skrzydło', spanish: 'el ala', gotIt: false, example: '**El ala** del avión está dañada.' },
@@ -295,7 +114,7 @@ export const technologiaTransportMiejscaFlashcardsFull: Flashcard[] = [
   { id: 142, polish: 'ograniczenie prędkości', spanish: 'el limite de velocidad', gotIt: false, example: '**El limite de velocidad** es 50 km/h.' },
   { id: 143, polish: 'punkt poboru opłat', spanish: 'el peaje', gotIt: false, example: '**El peaje** es muy caro.' },
   { id: 144, polish: 'rozbić się', spanish: 'estrellarse', gotIt: false, example: 'El coche se va a **estrellarse**.' },
-  { id: 145, polish: 'duch', spanish: 'el fantasma, el espíritu', gotIt: false, example: '**El fantasma** apareció.' },
+  { id: 145, polish: 'duch', spanish: 'el fantasma, el espíritu', gotIt: false, example: '**El fantasma** apareció.' }, //TODO zjawa
   { id: 146, polish: 'powiększać', spanish: 'alargar', gotIt: false, example: 'Puedes **alargar** la mesa?' },
   { id: 147, polish: 'pasować', spanish: 'caber', gotIt: false, example: 'No creo que vaya a **caber**.' },
   { id: 150, polish: 'scena', spanish: 'el escenario', gotIt: false, example: '**El escenario** es grande.' },
@@ -306,7 +125,7 @@ export const technologiaTransportMiejscaFlashcardsFull: Flashcard[] = [
 ];
 
 // Kategoria 3: Dom, Jedzenie, Cechy i Czas Wolny
-export const domJedzenieCzasWolnyFlashcardsFull: Flashcard[] = [
+export const domJedzenieCzasWolnyFlashcards: Flashcard[] = [
   { id: 5, polish: 'guma do żucia', spanish: 'el chicle', gotIt: false, example: 'Me gusta **el chicle** de menta.' },
   { id: 10, polish: 'z dostawą', spanish: 'a domicilio', gotIt: false, example: 'Pide la comida **a domicilio**.' },
   { id: 11, polish: 'słony', spanish: 'salado', gotIt: false, example: 'Este plato está **salado**.' },
@@ -320,7 +139,7 @@ export const domJedzenieCzasWolnyFlashcardsFull: Flashcard[] = [
   { id: 46, polish: 'mocny', spanish: 'potente', gotIt: false, example: 'Este motor es muy **potente**.' },
   { id: 47, polish: 'sportowy', spanish: 'deportivo', gotIt: false, example: 'Este coche es **deportivo**.' },
   { id: 48, polish: 'wytrzymały', spanish: 'resistente', gotIt: false, example: 'Este material es muy **resistente**.' },
-  { id: 49, polish: 'okulary do pływania', spanish: 'las gafas de natación', gotIt: false, example: 'Ponte **las gafas de natación**.' },
+  { id: 49, polish: 'okulary do pływania', spanish: 'las gafas de natación', gotIt: false, example: 'Ponte **las gafas de natación**.' }, //TODO okulary pływackie
   { id: 50, polish: 'chlor', spanish: 'el cloro', gotIt: false, example: 'La piscina tiene **el cloro**.' },
   { id: 51, polish: 'intensywnie', spanish: 'intensivamente', gotIt: false, example: 'Hay que entrenar **intensivamente**.' },
   { id: 52, polish: 'smaczny', spanish: 'sabroso', gotIt: false, example: 'Este plato está muy **sabroso**.' },
@@ -353,17 +172,17 @@ export const domJedzenieCzasWolnyFlashcardsFull: Flashcard[] = [
   { id: 118, polish: 'pościel', spanish: 'la ropa de cama', gotIt: false, example: 'Voy a lavar **la ropa de cama**.' },
   { id: 122, polish: 'podanie', spanish: 'el pase', gotIt: false, example: '**El pase** fue perfecto.' },
   { id: 123, polish: 'strzał', spanish: 'el tiro', gotIt: false, example: '**El tiro** fue muy preciso.' },
-  { id: 128, polish: 'kaczka', spanish: 'un pato', gotIt: false, example: 'Mira, **un pato**!' },
+  { id: 128, polish: 'kaczka', spanish: 'un pato', gotIt: false, example: 'Mira, **un pato**!' }, //TODO para kaczek
   { id: 129, polish: 'wiejski', spanish: 'rural', gotIt: false, example: 'Me gusta el ambiente **rural**.' },
   { id: 131, polish: 'strzelać na bramkę', spanish: 'disparar/tirar a puerta', gotIt: false, example: 'Tienes que **disparar a puerta**!' },
   { id: 136, polish: 'krem przeciwsłoneczny', spanish: 'la crema solar', gotIt: false, example: 'Ponte **la crema solar**.' },
   { id: 139, polish: 'pot', spanish: 'el sudor', gotIt: false, example: '**El sudor** me molesta.' },
-  { id: 151, polish: 'schronisko', spanish: 'el refugio de animales', gotIt: false, example: '**El refugio de animales** necesita ayuda.' },
+  { id: 151, polish: 'schronisko', spanish: 'el refugio de animales', gotIt: false, example: '**El refugio de animales** necesita ayuda.' }, //TODO schronisko dla zwierząt
   { id: 152, polish: 'kość', spanish: 'el hueso', gotIt: false, example: 'Tengo que limpair **el hueso**.' },
   { id: 153, polish: 'obroża', spanish: 'el collar', gotIt: false, example: 'Compra **el collar** para tu perro.' },
   { id: 154, polish: 'szczeniak', spanish: 'el cachorro', gotIt: false, example: 'Mira, que mono **el cachorro**.' },
   { id: 155, polish: 'smycz', spanish: 'la correa', gotIt: false, example: 'Coge **la correa** por favor.' },
-  { id: 158, polish: 'szermierka', spanish: 'la esgrima', gotIt: false, example: '**La esgrima** es un deporte difícil.' },
+  { id: 158, polish: 'szermierka', spanish: 'la esgrima', gotIt: false, example: '**La esgrima** es un deporte difícil.' }, //TODO walka na szpady
   { id: 164, polish: 'jestem zmotywowany', spanish: 'estoy arriba', gotIt: false, example: 'Hoy **estoy arriba**.' },
   { id: 165, polish: 'mózg', spanish: 'el cerebro', gotIt: false, example: '**El cerebro** es muy complejo.' },
 ];

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { WordSet, Flashcard, spoleczenstwoPracaPojeciaFlashcards, technologiaTransportMiejscaFlashcards, domJedzenieCzasWolnyFlashcards } from '@/flashcards';
+import { Flashcard, spoleczenstwoPracaPojeciaFlashcards, technologiaTransportMiejscaFlashcards, domJedzenieCzasWolnyFlashcards } from '@/flashcards';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -13,12 +13,6 @@ interface WordSet {
     id: string;
     title: string;
     flashcards: Flashcard[];
-}
-interface Flashcard {
-  id: number;
-  polish: string;
-  spanish: string;
-  gotIt: boolean;
 }
 const wordSets: WordSet[] = [
     {
@@ -219,9 +213,18 @@ export default function Home() {
                 </div>
             </CardContent>
             <CardContent className="absolute inset-0 flex items-center justify-center p-6 backface-hidden cursor-pointer rotate-y-180 bg-yellow-100" onClick={handleCardClick}>
-                <div className="text-xl font-semibold unselectable">
-                    {languageSide === 'polish' ? currentCard.spanish : currentCard.polish}
+                <div className="flex flex-col items-center">
+                    <div className="text-xl font-semibold unselectable">
+                        {languageSide === 'polish' ? currentCard.spanish : currentCard.polish}
+                    
+                    {currentCard.example && (
+                        <div className="mt-2 text-sm text-gray-600 unselectable">
+                            {currentCard.example}
+                        </div>
+                    )}
+                    </div>
                 </div>
+
             </CardContent>
         </Card>
       </div>
