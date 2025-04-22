@@ -1,27 +1,28 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import { Flashcard, spoleczenstwoPracaPojeciaFlashcards, technologiaTransportMiejscaFlashcards, domJedzenieCzasWolnyFlashcards } from '@/flashcards';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Flashcard, spoleczenstwoPracaPojeciaFlashcards, technologiaTransportMiejscaFlashcards, domJedzenieCzasWolnyFlashcards, FlashcardSet } from '@/flashcards';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from "@/components/ui/checkbox"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger} from "@/components/ui/dialog";
-import { ScrollArea } from "@/components/ui/scroll-area"
+
+import { Checkbox } from "@/components/ui/checkbox";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Switch } from "@/components/ui/switch";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Progress } from "@/components/ui/progress";
 
 interface WordSet {
     id: string;
-    title: string;
+    title: string,
     flashcards: Flashcard[];
 }
 const wordSets: WordSet[] = [
     {
         id: 'spoleczenstwoPracaPojecia',
-        title: 'Społeczeństwo, Praca i Pojęcia',
+        title: 'Społeczeństwo i Praca',
         flashcards: spoleczenstwoPracaPojeciaFlashcards
     },
     {
-        id: 'technologiaTransportMiejsca',
+        id: 'technologiaTransportMiejsca', 
         title: 'Technologia, Transport i Miejsca',
         flashcards: technologiaTransportMiejscaFlashcards
     },
@@ -34,21 +35,22 @@ const wordSets: WordSet[] = [
 
 function shuffleArray<T>(array: T[]): T[] {
   const newArray = [...array];
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-  }
-  return newArray;
+    for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
 }
-
+ 
 export default function Home() {
   const [selectedSet, setSelectedSet] = useState<string>(wordSets[0].id);
   const [flashcards, setFlashcards] = useState<Flashcard[]>(wordSets.find(set => set.id === selectedSet)?.flashcards || []);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [languageSide, setLanguageSide] = useState<'polish' | 'spanish'>('polish');
   const [isFlipped, setIsFlipped] = useState(false);
-  const [isRandom, setIsRandom] = useState(false);
+  const [isRandom, setIsRandom] = useState(true);
   const [openAllWords, setOpenAllWords] = useState(false);
+    const [openWordSets, setOpenWordSets] = useState(false);
 
   useEffect(() => {
       const savedSet = localStorage.getItem('selectedSet');
@@ -81,18 +83,21 @@ export default function Home() {
     localStorage.setItem(`currentCardIndex_${selectedSet}`, currentCardIndex.toString());
   }, [flashcards, currentCardIndex, selectedSet]);
 
-  const handleNextCard = () => {
-    goToNextCard();
-  }
-
   const markAsGotIt = () => {
-    handleNextCard();
-
     const updatedFlashcards = [...flashcards];
     updatedFlashcards[currentCardIndex].gotIt = true;
     setFlashcards(updatedFlashcards);
+    loadNextCard();
   };
 
+
+  const handleNextCard = () => {
+    loadNextCard();
+  }
+
+  const loadNextCard = () => {
+    goToNextCard();
+  }
 
   const markAsDontKnow = () => {
     goToNextCard();
@@ -159,7 +164,7 @@ export default function Home() {
 
   const remainingCardsCount = flashcards.filter(card => !card.gotIt).length;
   const currentCard = flashcards[currentCardIndex];
-  
+
   const handleCardClick = () => {
     setIsFlipped(!isFlipped);
   };
@@ -180,119 +185,120 @@ export default function Home() {
     }, [] as (string | JSX.Element)[]);
   };
 
-    if (remainingCardsCount === 0) {
-        return (
-            <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-secondary">
-                <h1 className="text-2xl font-bold mb-4 text-primary"></h1>
-                <p className="text-lg">All done!</p>
-                <Button variant="link" onClick={resetProgress} className="mt-4">
-                    Reset Progress
-                </Button>
-            </div>
+    const toggleLanguageSide = () => {
+      setLanguageSide(current => (current === 'polish' ? 'spanish' : 'polish'));
+    };
+
+
+  if (remainingCardsCount === 0) {
+      return (           
+          <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-secondary">
+              <h1 className="text-2xl font-bold mb-4 text-primary"></h1>
+              <p className="text-lg">All done!</p>
+              <Button variant="link" onClick={resetProgress} className="mt-4">
+                  Reset Progress
+              </Button>
+          </div>
         );
     }
-
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-secondary">
-      <h1 className="text-2xl font-bold mb-4 text-primary">FlashTarjetas</h1>
-
-        <Select onValueChange={(value) => setSelectedSet(value)} defaultValue={selectedSet}>
-            <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select Flashcard Set" />
-            </SelectTrigger>
-            <SelectContent>
-                {wordSets.map(set => (
-                    <SelectItem key={set.id} value={set.id}>
-                        {set.title}
-                    </SelectItem>
-                ))}
-            </SelectContent>
-        </Select>
+   
         
-      <Select onValueChange={(value) => setLanguageSide(value as 'polish' | 'spanish')} defaultValue="polish">
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select Language" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="polish">Polish 🇵🇱</SelectItem>
-          <SelectItem value="spanish">Spanish 🇪🇸</SelectItem>
-        </SelectContent>
-      </Select>
+    return <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-secondary">
+      <h1 className="text-2xl font-bold mb-4 text-primary">FlashTarjetas</h1>
+        <Sheet open={openWordSets} onOpenChange={setOpenWordSets}>
+            <SheetTrigger asChild>
+                <Button variant="outline" className="bg-teal-500 text-white hover:bg-teal-700 unselectable mt-4">
+                    Choose word set 
+                </Button>
+            </SheetTrigger>
+            <SheetContent className="sm:max-w-[425px]">
+                <SheetHeader>
+                    <SheetTitle>Choose word set</SheetTitle>
+                    <SheetDescription>
+                        Select a set of words to start learning.
+                    </SheetDescription>
+                </SheetHeader>
+                <ScrollArea className="h-[300px]">
+                    <div className="grid gap-4 py-4">
+                        {wordSets.map(set => (
+                            <div key={set.id} className="flex justify-between">
+                                <Button
+                                    variant={selectedSet === set.id ? "default" : "outline"}
+                                    onClick={() => {
+                                        setSelectedSet(set.id);
+                                        setOpenWordSets(false);
+                                    }}
+                                >
+                                    {set.title}
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
+                </ScrollArea>
+            </SheetContent>
+        </Sheet>  
 
-      <div className="relative w-full max-w-md mt-4">
-        <Card className={`w-full h-48 transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
-            <CardContent className="absolute inset-0 flex items-center justify-center p-6 backface-hidden cursor-pointer" onClick={handleCardClick}>
-                <div className="text-xl font-semibold unselectable">
-                    {languageSide === 'polish' ? currentCard.polish : currentCard.spanish}
-                </div>
-            </CardContent>
-            <CardContent className="absolute inset-0 flex items-center justify-center p-6 backface-hidden cursor-pointer rotate-y-180 bg-yellow-100" onClick={handleCardClick}>
-                <div className="flex flex-col items-center text-center">
-                    <div className="text-xl font-semibold unselectable mb-2">
-                        {languageSide === 'polish' ? currentCard.spanish : currentCard.polish}                    
-                    </div> 
-                    <div className="text-sm text-gray-600 unselectable">
-                        {languageSide === 'polish' ? formatExample(currentCard.example).map((part, i) => <React.Fragment key={i}>{part}</React.Fragment>) : ''}
-                    </div>        
-                </div>
-            </CardContent>
-
-        </Card>
-      </div>
-
-      <div className="flex gap-4 mt-4">
-        <Button variant="outline" onClick={markAsDontKnow} className="bg-red-500 text-white hover:bg-red-700 unselectable">
-          Don't know yet
-        </Button>
-        <Button onClick={markAsGotIt} className="bg-green-500 text-white hover:bg-green-700 unselectable">
-          Got it
-        </Button>
-      </div>
-
-      <div className="flex items-center mt-2">
-        <Checkbox id="random" checked={isRandom} onCheckedChange={setIsRandom} />
-        <label htmlFor="random" className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed">
-          Random
-        </label>
-      </div>
-
-      <div className="mt-4 text-gray-600">Flashcards remaining: {remainingCardsCount}/{flashcards.length}</div>
-
-      <Button variant="link" onClick={resetProgress} className="mt-4">
-        Reset Progress
-      </Button>
-        {/* Button to clear all localStorage data */}
-        <Button variant="link" onClick={hardReset} className="mt-2">
-            Hard Reset
-        </Button>
+        <div className="relative w-full max-w-md mt-4">
+        <div className={`w-full h-48 transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''} rounded-lg shadow-md border border-gray-200 bg-white`}>
+          <div className="absolute inset-0 flex items-center justify-center p-6 backface-hidden cursor-pointer" onClick={handleCardClick}>
+            <div className="text-xl font-semibold unselectable">
+              {languageSide === 'polish' ? currentCard.polish : currentCard.spanish}
+            </div>
+          </div>
+          <div className="absolute inset-0 flex items-center justify-center p-6 backface-hidden cursor-pointer rotate-y-180 bg-yellow-100 rounded-lg" onClick={handleCardClick}>
+            <div className="flex flex-col items-center text-center">
+              <div className="text-xl font-semibold unselectable mb-2">
+                {languageSide === 'polish' ? currentCard.spanish : currentCard.polish}
+              </div>
+              <div className="text-sm text-gray-600 unselectable">
+                {languageSide === 'polish' ? formatExample(currentCard.example).map((part, i) => <React.Fragment key={i}>{part}</React.Fragment>) : ''}
+              </div>
+            </div>
+          </div>
+        </div>
+       </div>
 
 
-      <Dialog open={openAllWords} onOpenChange={setOpenAllWords}>
-        <DialogTrigger asChild>
-          <Button variant="outline" className="mt-4">
-            Show All Words
+        <div className="flex gap-4 mt-4">
+          <Button variant="outline" onClick={markAsDontKnow} className="bg-rose-500 text-white hover:bg-rose-700 unselectable">
+            Don't know yet
           </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>All Words</DialogTitle>
-            <DialogDescription>
-              Here's a list of all the words you're learning.
-            </DialogDescription>
-          </DialogHeader>
-            <ScrollArea className="h-[300px]">
-                <div className="grid gap-4 py-4">
-                    {flashcards.map((card) => (
-                        <div key={card.id} className="flex justify-between">
-                            <span>{card.polish}</span>
-                            <span>{card.spanish} {card.gotIt ? '✅' : ''}</span>
-                        </div>
-                    ))}
-                </div>
-            </ScrollArea>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-}
+          <Button onClick={markAsGotIt} className="bg-emerald-500 text-white hover:bg-emerald-700 unselectable">
+            Got it
+          </Button>
+        </div>
 
+        <div className="flex items-center mt-2 justify-around gap-8">
+          <div className="flex items-center">
+            <Switch id="random" checked={isRandom} onCheckedChange={setIsRandom} />
+            <label htmlFor="random" className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed select-none">
+              Random
+            </label>
+          </div>
+          <div className="flex items-center">
+                <Switch id="language-switch" checked={languageSide === 'polish'} onCheckedChange={toggleLanguageSide} />
+                <label htmlFor="language-switch" className="ml-2 text-sm font-medium leading-none peer-disabled:cursor-not-allowed select-none"> {languageSide === 'polish' ? '🇵🇱 From Polish' : '🇪🇸 From Spanish'}</label>
+            </div>
+        </div>
+
+        <div className="mt-4 text-gray-600">Flashcards remaining: {remainingCardsCount}/{flashcards.length}
+          {remainingCardsCount > 0 && (
+            <Progress className="mt-2 bg-gray-200" value={((flashcards.length - remainingCardsCount) / flashcards.length) * 100}  color="blue" />
+          )}
+        
+        </div>
+ 
+        <Button variant="link" onClick={resetProgress} className="mt-4">
+          Reset Progress
+        </Button> 
+          {/* Button to clear all localStorage data */}
+          {/* <Button variant="link" onClick={hardReset} className="mt-2">
+              Hard Reset
+          </Button> */}
+          <div className="text-sm text-gray-300 unselectable">
+          v0.0.1
+          </div>
+    </div>
+    
+
+}
