@@ -269,12 +269,18 @@ export default function Home() {
     localStorage.setItem(`currentCardIndex_${selectedSet}`, currentCardIndex.toString());
   }, [flashcards, currentCardIndex, selectedSet]);
 
+  const handleNextCard = () => {
+    goToNextCard();
+  }
+
   const markAsGotIt = () => {
+    handleNextCard();
+
     const updatedFlashcards = [...flashcards];
     updatedFlashcards[currentCardIndex].gotIt = true;
     setFlashcards(updatedFlashcards);
-    goToNextCard();
   };
+
 
   const markAsDontKnow = () => {
     goToNextCard();
@@ -319,8 +325,10 @@ export default function Home() {
             }
         }
 
-        setCurrentCardIndex(nextIndex);
-        setIsFlipped(false);
+        setTimeout(() => {
+          setCurrentCardIndex(nextIndex);
+        }, 250)
+        setIsFlipped(false);    
     };
 
 
