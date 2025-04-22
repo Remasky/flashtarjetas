@@ -151,9 +151,15 @@ export default function Home() {
     setIsFlipped(false);
   };
 
+  // Function to clear all localStorage data.
+  const hardReset = () => {
+    localStorage.clear();
+    window.location.reload(); // Refresh the page to reset the application state.
+  };
+
   const remainingCardsCount = flashcards.filter(card => !card.gotIt).length;
   const currentCard = flashcards[currentCardIndex];
-
+  
   const handleCardClick = () => {
     setIsFlipped(!isFlipped);
   };
@@ -165,6 +171,14 @@ export default function Home() {
     : languageSide === 'polish'
       ? currentCard.polish
       : currentCard.spanish;
+
+  const formatExample = (example: string) => {
+    const parts = example.split('**');
+    return parts.reduce((acc, part, index) => {
+      if (index % 2 === 1) return [...acc, <b key={index}>{part}</b>];
+      return [...acc, part];
+    }, [] as (string | JSX.Element)[]);
+  };
 
     if (remainingCardsCount === 0) {
         return (
@@ -213,19 +227,16 @@ export default function Home() {
                 </div>
             </CardContent>
             <CardContent className="absolute inset-0 flex items-center justify-center p-6 backface-hidden cursor-pointer rotate-y-180 bg-yellow-100" onClick={handleCardClick}>
-                <div className="flex flex-col items-center">
-                    <div className="text-xl font-semibold unselectable">
-                        {languageSide === 'polish' ? currentCard.spanish : currentCard.polish}
-                    
-                    {currentCard.example && (
-                        <div className="mt-2 text-sm text-gray-600 unselectable">
-                            {currentCard.example}
-                        </div>
-                    )}
-                    </div>
+                <div className="flex flex-col items-center text-center">
+                    <div className="text-xl font-semibold unselectable mb-2">
+                        {languageSide === 'polish' ? currentCard.spanish : currentCard.polish}                    
+                    </div> 
+                    <div className="text-sm text-gray-600 unselectable">
+                        {languageSide === 'polish' ? formatExample(currentCard.example).map((part, i) => <React.Fragment key={i}>{part}</React.Fragment>) : ''}
+                    </div>        
                 </div>
-
             </CardContent>
+
         </Card>
       </div>
 
@@ -250,6 +261,11 @@ export default function Home() {
       <Button variant="link" onClick={resetProgress} className="mt-4">
         Reset Progress
       </Button>
+        {/* Button to clear all localStorage data */}
+        <Button variant="link" onClick={hardReset} className="mt-2">
+            Hard Reset
+        </Button>
+
 
       <Dialog open={openAllWords} onOpenChange={setOpenAllWords}>
         <DialogTrigger asChild>

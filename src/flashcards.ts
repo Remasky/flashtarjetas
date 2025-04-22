@@ -4,7 +4,7 @@ export interface Flashcard {
   id: number;
   polish: string;
   spanish: string;
-  example?: string;
+  example: string;
   gotIt: boolean;
 }
 
