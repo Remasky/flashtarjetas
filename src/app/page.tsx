@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from 'react';
-import { Flashcard, spoleczenstwoPracaPojeciaFlashcards, technologiaTransportMiejscaFlashcards, domJedzenieCzasWolnyFlashcards, FlashcardSet } from '@/flashcards';
+import React, { useState, useEffect } from 'react';
+import { Flashcard, spoleczenstwoPracaPojeciaFlashcards, technologiaTransportMiejscaFlashcards, domJedzenieCzasWolnyFlashcards } from '@/flashcards';
+
 import { Button } from '@/components/ui/button';
 
-import { Checkbox } from "@/components/ui/checkbox";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Switch } from "@/components/ui/switch";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -32,25 +32,23 @@ const wordSets: WordSet[] = [
         flashcards: domJedzenieCzasWolnyFlashcards
     },
 ];
-
-function shuffleArray<T>(array: T[]): T[] {
-  const newArray = [...array];
-    for (let i = newArray.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
-    }
-    return newArray;
-}
  
 export default function Home() {
-  const [selectedSet, setSelectedSet] = useState<string>(wordSets[0].id);
+  const initialSelectedSet = localStorage.getItem('selectedSet') || wordSets[0].id;
+  const [selectedSet, setSelectedSet] = useState<string>(initialSelectedSet);
+
+  const initialDisplayedSet = localStorage.getItem('displayedSet') || wordSets[0].id;
+  const [displayedSet, setDisplayedSet] = useState<string>(initialDisplayedSet);
+
+  const initialFlashcardSet = wordSets.find(set => set.id === initialSelectedSet)?.flashcards || [];
+  const [selectedFlashcardSet, setSelectedFlashcardSet] = useState<Flashcard[]>(initialFlashcardSet);
   const [flashcards, setFlashcards] = useState<Flashcard[]>(wordSets.find(set => set.id === selectedSet)?.flashcards || []);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [languageSide, setLanguageSide] = useState<'polish' | 'spanish'>('polish');
   const [isFlipped, setIsFlipped] = useState(false);
-  const [isRandom, setIsRandom] = useState(true);
-  const [openAllWords, setOpenAllWords] = useState(false);
+    const [isRandom, setIsRandom] = useState(true);
     const [openWordSets, setOpenWordSets] = useState(false);
+
 
   useEffect(() => {
       const savedSet = localStorage.getItem('selectedSet');
@@ -63,8 +61,14 @@ export default function Home() {
       localStorage.setItem('selectedSet', selectedSet);
       const currentSet = wordSets.find(set => set.id === selectedSet);
       setFlashcards(currentSet?.flashcards || []);
+      
       setCurrentCardIndex(0);
-      setIsFlipped(false);
+        setIsFlipped(false);
+        localStorage.setItem('displayedSet', selectedSet);
+  }, [selectedSet]);
+    
+  useEffect(() => {
+    localStorage.setItem('displayedSet', displayedSet);
   }, [selectedSet]);
 
     useEffect(() => {
@@ -89,11 +93,6 @@ export default function Home() {
     setFlashcards(updatedFlashcards);
     loadNextCard();
   };
-
-
-  const handleNextCard = () => {
-    loadNextCard();
-  }
 
   const loadNextCard = () => {
     goToNextCard();
@@ -169,14 +168,6 @@ export default function Home() {
     setIsFlipped(!isFlipped);
   };
 
-  const displayedWord = isFlipped
-    ? languageSide === 'polish'
-      ? currentCard.spanish
-      : currentCard.polish
-    : languageSide === 'polish'
-      ? currentCard.polish
-      : currentCard.spanish;
-
   const formatExample = (example: string) => {
     const parts = example.split('**');
     return parts.reduce((acc, part, index) => {
@@ -185,8 +176,26 @@ export default function Home() {
     }, [] as (string | JSX.Element)[]);
   };
 
+    const renderFlashcardPreview = (flashcardsToRender: Flashcard[]) => {
+        return flashcardsToRender.map((card, index) => (
+            <div key={card.id} className="flex justify-between items-center py-2 border-b">
+                <div>
+                <p className="font-small">
+                    {card.polish} - {card.spanish}
+                </p>
+                </div>
+            </div>
+        ));
+    };
+
     const toggleLanguageSide = () => {
-      setLanguageSide(current => (current === 'polish' ? 'spanish' : 'polish'));
+        setLanguageSide(current => (current === 'polish' ? 'spanish' : 'polish'));
+    };
+
+    const handleConfirmSet = () => {
+        setSelectedFlashcardSet(wordSets.find(s => s.id === displayedSet)?.flashcards || []);
+        setSelectedSet(selectedSet);
+        setOpenWordSets(false);
     };
 
 
@@ -204,14 +213,14 @@ export default function Home() {
    
         
     return <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-secondary">
-      <h1 className="text-2xl font-bold mb-4 text-primary">FlashTarjetas</h1>
-        <Sheet open={openWordSets} onOpenChange={setOpenWordSets}>
+        <h1 className="text-2xl font-bold mb-4 text-primary">FlashTarjetas</h1>
+        <Sheet open={openWordSets} onOpenChange={setOpenWordSets} >
             <SheetTrigger asChild>
                 <Button variant="outline" className="bg-teal-500 text-white hover:bg-teal-700 unselectable mt-4">
                     Choose word set 
                 </Button>
             </SheetTrigger>
-            <SheetContent className="sm:max-w-[425px]">
+            <SheetContent className="sm:max-w-[425px] space-y-4">
                 <SheetHeader>
                     <SheetTitle>Choose word set</SheetTitle>
                     <SheetDescription>
@@ -220,24 +229,43 @@ export default function Home() {
                 </SheetHeader>
                 <ScrollArea className="h-[300px]">
                     <div className="grid gap-4 py-4">
-                        {wordSets.map(set => (
-                            <div key={set.id} className="flex justify-between">
+                        {wordSets.map((set) => (
+                            <div key={set.id} className="flex justify-between items-center">
                                 <Button
                                     variant={selectedSet === set.id ? "default" : "outline"}
                                     onClick={() => {
-                                        setSelectedSet(set.id);
-                                        setOpenWordSets(false);
-                                    }}
+                                        const selectedSetData = wordSets.find(s => s.id === set.id);
+                                        if(selectedSetData){
+                                            setDisplayedSet(set.id);
+                                            setSelectedFlashcardSet(selectedSetData.flashcards)
+                                        }
+                                       setSelectedSet(set.id);
+                                    }} 
                                 >
                                     {set.title}
                                 </Button>
                             </div>
                         ))}
+                        <div className="flex justify-end">
+                            <Button onClick={handleConfirmSet}  className="bg-emerald-500">Confirm</Button>
+                        </div>
                     </div>
                 </ScrollArea>
-            </SheetContent>
-        </Sheet>  
+                        <div className="mt-6 h-[200px]">
+                            <h3 className="text-lg font-semibold mb-2">Flashcard Preview</h3>
+                           <ScrollArea className="h-full">
+                                <div className="space-y-4">
+                                    {renderFlashcardPreview(selectedFlashcardSet)}
+                                </div>
+                           </ScrollArea>
+                        </div>
 
+            </SheetContent>   
+            
+        </Sheet>
+        <h2 className="text-medium">
+        {wordSets.find(set => set.id === displayedSet)?.title}
+        </h2>
         <div className="relative w-full max-w-md mt-4">
         <div className={`w-full h-48 transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''} rounded-lg shadow-md border border-gray-200 bg-white`}>
           <div className="absolute inset-0 flex items-center justify-center p-6 backface-hidden cursor-pointer" onClick={handleCardClick}>
@@ -291,7 +319,6 @@ export default function Home() {
         <Button variant="link" onClick={resetProgress} className="mt-4">
           Reset Progress
         </Button> 
-          {/* Button to clear all localStorage data */}
           {/* <Button variant="link" onClick={hardReset} className="mt-2">
               Hard Reset
           </Button> */}
@@ -299,6 +326,4 @@ export default function Home() {
           v0.0.1
           </div>
     </div>
-    
-
-}
+};
