@@ -44,14 +44,9 @@ const wordSets: WordSet[] = [
 ];
  
 export default function Home() {
-  const initialSelectedSet = localStorage.getItem('selectedSet') || wordSets[0].id;
-  const [selectedSet, setSelectedSet] = useState<string>(initialSelectedSet);
-
-  const initialDisplayedSet = localStorage.getItem('displayedSet') || wordSets[0].id;
-  const [displayedSet, setDisplayedSet] = useState<string>(initialDisplayedSet);
-
-  const initialFlashcardSet = wordSets.find(set => set.id === initialSelectedSet)?.flashcards || [];
-  const [selectedFlashcardSet, setSelectedFlashcardSet] = useState<Flashcard[]>(initialFlashcardSet);
+  const [selectedSet, setSelectedSet] = useState<string>(wordSets[0].id);
+  const [displayedSet, setDisplayedSet] = useState<string>(wordSets[0].id);
+  const [selectedFlashcardSet, setSelectedFlashcardSet] = useState<Flashcard[]>(wordSets[0].flashcards);
   const [flashcards, setFlashcards] = useState<Flashcard[]>(wordSets.find(set => set.id === selectedSet)?.flashcards || []);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [languageSide, setLanguageSide] = useState<'polish' | 'spanish'>('polish');
@@ -64,6 +59,9 @@ export default function Home() {
       const savedSet = localStorage.getItem('selectedSet');
       if (savedSet) {
           setSelectedSet(savedSet);
+          setDisplayedSet(savedSet);
+          const set = wordSets.find(s => s.id === savedSet);
+          if (set) setSelectedFlashcardSet(set.flashcards);
       }
   }, []);
 
