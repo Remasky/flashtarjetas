@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Flashcard, spoleczenstwoPracaPojeciaFlashcards, technologiaTransportMiejscaFlashcards, domJedzenieCzasWolnyFlashcards } from '@/flashcards';
+import { Flashcard, spoleczenstwoPracaPojeciaFlashcards, technologiaTransportMiejscaFlashcards, domJedzenieCzasWolnyFlashcards, wyrazeniaEmocjeZwrotyFlashcards, prawoFinanseRozneFlashcards } from '@/flashcards';
 
 import { Button } from '@/components/ui/button';
 
@@ -30,6 +30,16 @@ const wordSets: WordSet[] = [
         id: 'domJedzenieCzasWolny',
         title: 'Dom, Jedzenie i Czas Wolny',
         flashcards: domJedzenieCzasWolnyFlashcards
+    },
+    {
+        id: 'wyrazeniaEmocjeZwroty',
+        title: 'Wyrażenia, Emocje i Zwroty',
+        flashcards: wyrazeniaEmocjeZwrotyFlashcards
+    },
+    {
+        id: 'prawoFinanseRozne',
+        title: 'Prawo, Finanse i Różne',
+        flashcards: prawoFinanseRozneFlashcards
     },
 ];
  
